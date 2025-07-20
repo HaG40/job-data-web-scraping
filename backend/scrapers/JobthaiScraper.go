@@ -1,6 +1,7 @@
 package scrapers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 
 var jobthaiCards []JobCard
 
-func ScrapingJobthai(keywrd string, page int, onlyBKK bool) []JobCard {
+func ScrapingJobthai(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 
 	if jobthaiCards != nil {
 		jobthaiCards = nil
@@ -35,6 +36,10 @@ func ScrapingJobthai(keywrd string, page int, onlyBKK bool) []JobCard {
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobthai.com", "jobthai.com"))
 
+	c.OnError(func(_ *colly.Response, err error) {
+		fmt.Printf("JobBKK scraping error: %v\n", err)
+	})
+
 	c.OnHTML("a[ga-name]", func(h *colly.HTMLElement) {
 		selection := h.DOM
 		var tmpCard JobCard
@@ -55,7 +60,10 @@ func ScrapingJobthai(keywrd string, page int, onlyBKK bool) []JobCard {
 		jobthaiCards = append(jobthaiCards, tmpCard)
 	})
 
-	c.Visit(scrapeURL)
+	err := c.Visit(scrapeURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to visit JobThai: %w", err)
+	}
 
-	return jobthaiCards
+	return jobthaiCards, nil
 }

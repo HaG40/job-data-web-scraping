@@ -12,7 +12,7 @@ import (
 
 var jobthCards []JobCard
 
-func ScrapingJobTH(keywrd string, page int, onlyBKK bool) []JobCard {
+func ScrapingJobTH(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 
 	if jobthCards != nil {
 		jobthCards = nil
@@ -37,6 +37,10 @@ func ScrapingJobTH(keywrd string, page int, onlyBKK bool) []JobCard {
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobth.com", "jobth.com"))
+
+	c.OnError(func(_ *colly.Response, err error) {
+		fmt.Printf("JobBKK scraping error: %v\n", err)
+	})
 
 	c.OnHTML("div.w3-hover-shadow", func(h *colly.HTMLElement) {
 		selection := h.DOM
@@ -78,7 +82,10 @@ func ScrapingJobTH(keywrd string, page int, onlyBKK bool) []JobCard {
 		jobthCards = append(jobthCards, tmpCard)
 	})
 
-	c.Visit(scrapeURL)
+	err := c.Visit(scrapeURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to visit JobTH: %w", err)
+	}
 
-	return jobthCards
+	return jobthCards, nil
 }

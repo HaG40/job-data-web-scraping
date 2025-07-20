@@ -3,8 +3,11 @@ package controller
 import (
 	"encoding/json"
 	"job-scraping-project/scrapers"
+	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func contains(slice []string, value string) bool {
@@ -20,6 +23,7 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 	// GET method
 	if r.Method == http.MethodGet {
 
+		// check error
 		w.Header().Set("Content-type", "application/json")
 
 		keyword := r.URL.Query().Get("keyword")
@@ -32,6 +36,7 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 		page, err := strconv.Atoi(pageStr)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			return
 		}
 
 		bkkOnlyBool, err := strconv.ParseBool(bkkOnly)
@@ -39,31 +44,70 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			bkkOnlyBool = false
 		}
 
-		// collect data
-		var data []scrapers.JobCard
-		if len(source) == 0 {
-			data = append(data, scrapers.ScrapingJobbkk(keyword, page, bkkOnlyBool)...)
-			data = append(data, scrapers.ScrapingJobthai(keyword, page, bkkOnlyBool)...)
-			data = append(data, scrapers.ScrapingJobTH(keyword, page, bkkOnlyBool)...)
-		} else {
-			if contains(source, "jobbkk") {
-				data = append(data, scrapers.ScrapingJobbkk(keyword, page, bkkOnlyBool)...)
+		var jobbkkData, jobthaiData, jobthData []scrapers.JobCard
+		var scrapeErr int
+
+		scraperFuncs := []func(string, int, bool) ([]scrapers.JobCard, error){
+			scrapers.ScrapingJobbkk,
+			scrapers.ScrapingJobthai,
+			scrapers.ScrapingJobTH,
+		}
+
+		for i, scrape := range scraperFuncs {
+			jobs, err := scrape(keyword, page, bkkOnlyBool)
+			if err != nil {
+				log.Printf("Error scraping source #%d: %v", i+1, err)
+				scrapeErr++
+				continue
 			}
-			if contains(source, "jobthai") {
-				data = append(data, scrapers.ScrapingJobthai(keyword, page, bkkOnlyBool)...)
+
+			if i == 0 {
+				jobbkkData = append(jobbkkData, jobs...)
 			}
-			if contains(source, "jobth") {
-				data = append(data, scrapers.ScrapingJobTH(keyword, page, bkkOnlyBool)...)
+			if i == 1 {
+				jobthaiData = append(jobthaiData, jobs...)
+			}
+			if i == 2 {
+				jobthData = append(jobthData, jobs...)
 			}
 		}
 
-		// convert to json
-		if len(data) != 0 {
-			json.NewEncoder(w).Encode(data)
-			w.WriteHeader(http.StatusOK)
+		if scrapeErr >= len(scraperFuncs) {
+			w.WriteHeader(http.StatusNotFound)
+		}
+
+		// collect data
+		var data []scrapers.JobCard
+		if len(source) == 0 {
+			data = append(data, jobbkkData...)
+			data = append(data, jobthaiData...)
+			data = append(data, jobthData...)
 		} else {
+			if contains(source, "jobbkk") {
+				data = append(data, jobbkkData...)
+			}
+			if contains(source, "jobthai") {
+				data = append(data, jobthaiData...)
+			}
+			if contains(source, "jobth") {
+				data = append(data, jobthData...)
+			}
+		}
+
+		randomizer := rand.New(rand.NewSource(time.Now().UnixNano()))
+		randomizer.Shuffle(len(data), func(i, j int) {
+			data[i], data[j] = data[j], data[i]
+		})
+
+		// convert to json
+		if len(data) == 0 {
 			w.Write([]byte("No data available"))
 			w.WriteHeader(http.StatusNoContent)
+			return
+		} else {
+			json.NewEncoder(w).Encode(data)
+			w.WriteHeader(http.StatusOK)
+			return
 		}
 
 	}
