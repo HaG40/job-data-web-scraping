@@ -1,6 +1,7 @@
 package scrapers
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -27,15 +28,20 @@ func getJobUrl(url string) string {
 	return s
 }
 
-func ScrapingJobbkk(keywrd string) []JobCard {
+func ScrapingJobbkk(keywrd string, page int) []JobCard {
+
+	if jobbkkCards != nil {
+		jobbkkCards = nil
+	}
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
+	pageStr := strconv.Itoa(page)
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobbkk.com/หางาน"
+		scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน"
 	} else {
-		scrapeURL = "https://www.jobbkk.com/jobs/lists/1/หางาน," + keywrd
+		scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobbkk.com", "jobbkk.com"))

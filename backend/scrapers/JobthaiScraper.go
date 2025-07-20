@@ -1,7 +1,7 @@
 package scrapers
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -9,15 +9,20 @@ import (
 
 var jobthaiCards []JobCard
 
-func ScrapingJobthai(keywrd string) []JobCard {
+func ScrapingJobthai(keywrd string, page int) []JobCard {
+
+	if jobthaiCards != nil {
+		jobthaiCards = nil
+	}
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
+	pageStr := strconv.Itoa(page)
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobthai.com/หางาน/งานทั้งหมด"
+		scrapeURL = "https://www.jobthai.com/หางาน/งานทั้งหมด/" + pageStr
 	} else {
-		scrapeURL = "https://www.jobthai.com/th/jobs?keyword=" + keywrd
+		scrapeURL = "https://www.jobthai.com/th/jobs?keyword=" + keywrd + "&page=" + pageStr
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobthai.com", "jobthai.com"))
@@ -37,7 +42,7 @@ func ScrapingJobthai(keywrd string) []JobCard {
 		tmpCard.URL = "https://www.jobthai.com" + scrapedAttribute
 		tmpCard.Source = "jobthai.com"
 
-		fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
+		// fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
 
 		jobthaiCards = append(jobthaiCards, tmpCard)
 	})

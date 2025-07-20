@@ -3,6 +3,7 @@ package scrapers
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -11,15 +12,20 @@ import (
 
 var jobthCards []JobCard
 
-func ScrapingJobTH(keywrd string) []JobCard {
+func ScrapingJobTH(keywrd string, page int) []JobCard {
+
+	if jobthCards != nil {
+		jobthCards = nil
+	}
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
+	pageStr := strconv.Itoa(page)
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobth.com/searchjob2.php"
+		scrapeURL = "https://www.jobth.com/searchjob2.php?page=" + pageStr
 	} else {
-		scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + keywrd
+		scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + keywrd + "&page=" + strconv.Itoa(page)
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobth.com", "jobth.com"))
@@ -59,7 +65,7 @@ func ScrapingJobTH(keywrd string) []JobCard {
 		tmpCard.URL = "https://www.jobth.com" + scrapedAttribute
 		tmpCard.Source = "jobth.com"
 
-		fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
+		// fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
 
 		jobthCards = append(jobthCards, tmpCard)
 	})
