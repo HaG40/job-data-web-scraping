@@ -9,7 +9,7 @@ import (
 
 var jobthaiCards []JobCard
 
-func ScrapingJobthai(keywrd string, page int) []JobCard {
+func ScrapingJobthai(keywrd string, page int, onlyBKK bool) []JobCard {
 
 	if jobthaiCards != nil {
 		jobthaiCards = nil
@@ -20,9 +20,17 @@ func ScrapingJobthai(keywrd string, page int) []JobCard {
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobthai.com/หางาน/งานทั้งหมด/" + pageStr
+		if onlyBKK {
+			scrapeURL = "https://www.jobthai.com/หางาน/กรุงเทพมหานคร/" + pageStr
+		} else {
+			scrapeURL = "https://www.jobthai.com/หางาน/งานทั้งหมด/" + pageStr
+		}
 	} else {
-		scrapeURL = "https://www.jobthai.com/th/jobs?keyword=" + keywrd + "&page=" + pageStr
+		if onlyBKK {
+			scrapeURL = "https://www.jobthai.com/th/jobs?province=01&keyword=" + keywrd + "&page=" + pageStr
+		} else {
+			scrapeURL = "https://www.jobthai.com/th/jobs?keyword=" + keywrd + "&page=" + pageStr
+		}
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobthai.com", "jobthai.com"))

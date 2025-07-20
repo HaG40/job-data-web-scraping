@@ -28,7 +28,7 @@ func getJobUrl(url string) string {
 	return s
 }
 
-func ScrapingJobbkk(keywrd string, page int) []JobCard {
+func ScrapingJobbkk(keywrd string, page int, onlyBKK bool) []JobCard {
 
 	if jobbkkCards != nil {
 		jobbkkCards = nil
@@ -39,9 +39,17 @@ func ScrapingJobbkk(keywrd string, page int) []JobCard {
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน"
+		if onlyBKK {
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน?province_id=246"
+		} else {
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน"
+		}
 	} else {
-		scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd
+		if onlyBKK {
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd
+		} else {
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd + "?province_id=246"
+		}
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobbkk.com", "jobbkk.com"))

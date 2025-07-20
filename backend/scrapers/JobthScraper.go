@@ -12,7 +12,7 @@ import (
 
 var jobthCards []JobCard
 
-func ScrapingJobTH(keywrd string, page int) []JobCard {
+func ScrapingJobTH(keywrd string, page int, onlyBKK bool) []JobCard {
 
 	if jobthCards != nil {
 		jobthCards = nil
@@ -23,9 +23,17 @@ func ScrapingJobTH(keywrd string, page int) []JobCard {
 
 	var scrapeURL string
 	if keywrd == "" {
-		scrapeURL = "https://www.jobth.com/searchjob2.php?page=" + pageStr
+		if onlyBKK {
+			scrapeURL = "https://www.jobth.com/searchjob2.php?city=city00&page=" + pageStr
+		} else {
+			scrapeURL = "https://www.jobth.com/searchjob2.php?page=" + pageStr
+		}
 	} else {
-		scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + keywrd + "&page=" + strconv.Itoa(page)
+		if onlyBKK {
+			scrapeURL = "https://www.jobth.com/searchjob2.php?city=city00&keyword=" + keywrd + "&page=" + strconv.Itoa(page)
+		} else {
+			scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + keywrd + "&page=" + strconv.Itoa(page)
+		}
 	}
 
 	c := colly.NewCollector(colly.AllowedDomains("www.jobth.com", "jobth.com"))

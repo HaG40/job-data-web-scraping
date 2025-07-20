@@ -25,6 +25,7 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 		keyword := r.URL.Query().Get("keyword")
 		pageStr := r.URL.Query().Get("page")
 		source := r.URL.Query()["source"]
+		bkkOnly := r.URL.Query().Get("bkk")
 		if pageStr == "" {
 			pageStr = "1"
 		}
@@ -33,21 +34,26 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 		}
 
+		bkkOnlyBool, err := strconv.ParseBool(bkkOnly)
+		if err != nil {
+			bkkOnlyBool = false
+		}
+
 		// collect data
 		var data []scrapers.JobCard
 		if len(source) == 0 {
-			data = append(data, scrapers.ScrapingJobbkk(keyword, page)...)
-			data = append(data, scrapers.ScrapingJobthai(keyword, page)...)
-			data = append(data, scrapers.ScrapingJobTH(keyword, page)...)
+			data = append(data, scrapers.ScrapingJobbkk(keyword, page, bkkOnlyBool)...)
+			data = append(data, scrapers.ScrapingJobthai(keyword, page, bkkOnlyBool)...)
+			data = append(data, scrapers.ScrapingJobTH(keyword, page, bkkOnlyBool)...)
 		} else {
 			if contains(source, "jobbkk") {
-				data = append(data, scrapers.ScrapingJobbkk(keyword, page)...)
+				data = append(data, scrapers.ScrapingJobbkk(keyword, page, bkkOnlyBool)...)
 			}
 			if contains(source, "jobthai") {
-				data = append(data, scrapers.ScrapingJobthai(keyword, page)...)
+				data = append(data, scrapers.ScrapingJobthai(keyword, page, bkkOnlyBool)...)
 			}
 			if contains(source, "jobth") {
-				data = append(data, scrapers.ScrapingJobTH(keyword, page)...)
+				data = append(data, scrapers.ScrapingJobTH(keyword, page, bkkOnlyBool)...)
 			}
 		}
 
