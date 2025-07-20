@@ -6,11 +6,12 @@ import (
 )
 
 func main() {
-	jobCards := scrapers.ScrapingJobFinFin("Software engineer")
+	jobCards := scrapers.ScrapingJobbkk("Software engineer")
 
 	controller.HandlerInit(jobCards)
 	// controller.MiddlewareHandler()
 
-	// http.HandleFunc("/api/jobs/", controller.JobsHandler)
+	// http.HandleFunc("/api/jobs", controller.JobsHandler)
+	// http.HandleFunc("/api/jobs/", controller.JobsKeywrdHandler)
 	// http.ListenAndServe(":8888", nil)
 }

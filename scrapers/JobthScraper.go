@@ -11,7 +11,7 @@ import (
 
 var jobthCards []JobCard
 
-func ScrapingJobFinFin(keywrd string) []JobCard {
+func ScrapingJobTH(keywrd string) []JobCard {
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
 
@@ -59,7 +59,7 @@ func ScrapingJobFinFin(keywrd string) []JobCard {
 		tmpCard.URL = "https://www.jobth.com" + scrapedAttribute
 		tmpCard.Source = "jobth.com"
 
-		// fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
+		fmt.Println(tmpCard.Title + "\n" + tmpCard.Company + "\n" + tmpCard.Location + "\n" + tmpCard.Salary + "\n" + tmpCard.URL + "\n" + tmpCard.Source + "\n")
 
 		jobthCards = append(jobthCards, tmpCard)
 	})
