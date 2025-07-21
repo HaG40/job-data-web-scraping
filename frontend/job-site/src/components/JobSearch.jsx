@@ -38,47 +38,54 @@ function JobSearch() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Job Search</h1>
+      <h1 className="text-2xl font-bold mb-4 text-green-700 ml-4">Job Search</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div class="justify-self-center">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="border p-2 rounded w-100"
+            className="border p-2 rounded w-106 mr-1"
             placeholder='ค้นหางานที่ตามหา...'
           />
 
+        <button
+          type="submit"
+          className="bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Search"}
+        </button>
+
+
+        </div>
+
+        <div className="flex items-center ml-4">
+        <label class="mr-2">แหล่งที่มา:</label>
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            className="border p-2 m-2 rounded"
+            className="border p-1 mr-4 rounded w-35"
           >
-            <option value="all">แหล่งที่มา</option>
-            <option value="jobbkk">JobBKK</option>
-            <option value="jobthai">JobThai</option>
-            <option value="jobth">JobTH</option>
+  
+            <option value="all">ทั้งหมด</option>
+            <option value="jobbkk">JobBKK.com</option>
+            <option value="jobthai">JobThai.com</option>
+            <option value="jobth">JobTH.com</option>
           </select>
-        </div>
 
-        <div className="flex items-center">
+
           <input
             type="checkbox"
             checked={bkkOnly}
             onChange={() => setBkkOnly(!bkkOnly)}
             id="bkkOnly"
-            className="mr-2"
+            className="mr-2 accent-green-600"
           />
           <label htmlFor="bkkOnly">ภายในกทม.</label>
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Search"}
-        </button>
+
       </form>
 
       <div className="mt-6">
@@ -94,8 +101,8 @@ function JobSearch() {
                   key={index}
                   className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
                 >
-                  <h3 className="text-lg font-bold text-blue-700">
-                    {job.title || 'ไม่ระบุชื่อตำแหน่ง'}
+                  <h3 className="text-lg font-bold text-green-700">
+                    {job.title}
                   </h3>
 
                   <p className="mt-1 text-gray-700">
@@ -133,17 +140,17 @@ function JobSearch() {
               <button
                 onClick={() => fetchResults(page - 1)}
                 disabled={page <= 1 || isLoading}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                className="px-3 py-1 bg-green-600 text-white text-xl rounded hover:bg-gray-400 disabled:opacity-50"
               >
-                Previous
+                &#8592;
               </button>
-              <span className="px-4 text-sm text-gray-600">Page {page}</span>
+              <span className="px-4 text-l text-gray-600">Page {page}</span>
               <button
                 onClick={() => fetchResults(page + 1)}
                 disabled={isLoading}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                className="px-3 py-1 bg-green-600 text-white text-xl rounded hover:bg-gray-400 disabled:opacity-50"
               >
-                Next
+                &#8594;
               </button>
             </div>
           </>
