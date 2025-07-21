@@ -1,0 +1,137 @@
+import React, { useState } from 'react';
+
+function JobSearch() {
+  const [keyword, setKeyword] = useState('');
+  const [page, setPage] = useState('1');
+  const [bkkOnly, setBkkOnly] = useState(false);
+  const [source, setSource] = useState("")
+  const [results, setResults] = useState([]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams({
+      keyword,
+      page,
+      bkkOnly: bkkOnly.toString(),
+      source
+    });
+
+    try {
+      const res = await fetch(`http://localhost:8888/api/jobs?${params.toString()}`);
+      if (!res.ok) throw new Error("Something went wrong");
+      const data = await res.json();
+      setResults(data);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setResults([]);
+    }
+  };
+
+  return (
+    <div className="p-4 max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Job Search</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="border p-2 rounded w-100"
+            placeholder='ค้นหางานที่ตามหา...'
+          />
+
+            <select
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+                className="border p-2 m-2 rounded"
+                >
+                <option value="all">แหล่งที่มา</option>
+                <option value="jobbkk">JobBKK</option>
+                <option value="jobthai">JobThai</option>
+                <option value="jobth">JobTH</option>
+            </select>
+        </div>
+
+        <div>
+          <label className="block">Page:</label>
+          <input
+            type="number"
+            min="1"
+            value={page}
+            onChange={(e) => setPage(e.target.value)}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={bkkOnly}
+            onChange={() => setBkkOnly(!bkkOnly)}
+            id="bkkOnly"
+            className="mr-2"
+          />
+          <label htmlFor="bkkOnly">ภายในกทม.</label>
+        </div>
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </form>
+
+    <div className="mt-6">
+    <h2 h2 className="text-xl font-semibold">Results:</h2>
+    {results.length > 0 ? (
+        <div className="space-y-4 mt-4">
+        {results.map((job, index) => (
+            <div
+            key={index}
+            className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+            >
+            <h3 className="text-lg font-bold text-blue-700">
+                {job.title || 'ไม่ระบุชื่อตำแหน่ง'}
+            </h3>
+
+            <p className="mt-1 text-gray-700">
+                <span className="font-semibold">บริษัท:</span> {job.company}
+            </p>
+
+            <p className="mt-1 text-gray-700">
+                <span className="font-semibold">สถานที่:</span> {job.location}
+            </p>
+
+            <p className="mt-1 text-gray-700">
+                <span className="font-semibold">เงินเดือน:</span> {job.salary}
+            </p>
+
+            <p className="mt-1 text-gray-700">
+                <span className="font-semibold">ที่มา:</span>{' '}
+                <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
+                {job.source}
+                </span>
+            </p>
+
+            <a
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-3 text-sm text-blue-600 underline hover:text-blue-800"
+            >
+                ดูงานนี้
+            </a>
+        </div>
+        ))}
+        </div>
+        ) : (
+            <p className="text-gray-500 mt-2">No results found.</p>
+        )}
+        </div>
+    </div>
+  );
+}
+
+export default JobSearch;

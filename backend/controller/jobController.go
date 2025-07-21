@@ -78,7 +78,7 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 
 		// collect data
 		var data []scrapers.JobCard
-		if len(source) == 0 {
+		if contains(source, "all") {
 			data = append(data, jobbkkData...)
 			data = append(data, jobthaiData...)
 			data = append(data, jobthData...)
