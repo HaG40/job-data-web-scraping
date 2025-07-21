@@ -82,16 +82,15 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			data = append(data, jobbkkData...)
 			data = append(data, jobthaiData...)
 			data = append(data, jobthData...)
-		} else {
-			if contains(source, "jobbkk") {
-				data = append(data, jobbkkData...)
-			}
-			if contains(source, "jobthai") {
-				data = append(data, jobthaiData...)
-			}
-			if contains(source, "jobth") {
-				data = append(data, jobthData...)
-			}
+		}
+		if contains(source, "jobbkk") {
+			data = append(data, jobbkkData...)
+		}
+		if contains(source, "jobthai") {
+			data = append(data, jobthaiData...)
+		}
+		if contains(source, "jobth") {
+			data = append(data, jobthData...)
 		}
 
 		randomizer := rand.New(rand.NewSource(time.Now().UnixNano()))
