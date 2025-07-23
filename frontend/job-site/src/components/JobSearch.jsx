@@ -89,17 +89,20 @@ function JobSearch() {
       </form>
 
       <div className="mt-6">
-        <h2 className="text-xl font-semibold">Results:</h2>
+        <div className='block'> 
+          <h2 className="text-xl font-semibold inline">Results:</h2>
+          {results.length > 0 ? <p className="inline float-right text-gray-700">Page: {page}</p> : <></>}
+        </div>
 
         {isLoading ? (
-          <p className="text-gray-500 mt-2">กำลังโหลด...</p>
+          <p className="text-gray-500 mt-2 justify-self-center">กำลังโหลด...</p>
         ) : results.length > 0 ? (
           <>
             <div className="space-y-4 mt-4">
               {results.map((job, index) => (
                 <div
                   key={index}
-                  className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+                  className="pb-5 pr-5 pl-5 pt-3 border border-gray-200 rounded-2xl shadow-sm bg-white"
                 >
                   <h3 className="text-lg font-bold text-green-700">
                     {job.title}
@@ -117,13 +120,6 @@ function JobSearch() {
                     <span className="font-semibold">เงินเดือน:</span> {job.salary}
                   </p>
 
-                  <p className="mt-1 text-gray-700">
-                    <span className="font-semibold">ที่มา:</span>{' '}
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
-                      {job.source}
-                    </span>
-                  </p>
-
                   <a
                     href={job.url}
                     target="_blank"
@@ -132,6 +128,14 @@ function JobSearch() {
                   >
                     ดูงานนี้
                   </a>
+
+                  <p className="mt-1 text-gray-700 float-right">
+                    <span className="font-semibold">ที่มา:</span>{' '}
+                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
+                      {job.source}
+                    </span>
+                  </p>
+
                 </div>
               ))}
             </div>
@@ -155,7 +159,7 @@ function JobSearch() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500 mt-2">No results found.</p>
+          <p className="text-gray-500 mt-2 justify-self-center">No results found.</p>
         )}
       </div>
     </div>
