@@ -96,16 +96,19 @@ function JobSearch() {
       <div className="mt-6">
         <div className='flex justify-between'> 
           <h2 className="text-xl font-semibold flex items-center">Results:</h2>
-          <div className='flex items-center'>
-            {results.length > 0 ? <p className="text-gray-700">Page: &nbsp;</p> : <></>}
-            {!isLoading ? <p className='text-gray-700'>{page}</p> : <p className="animate-spin rounded-full h-4 w-4 border-t-white border-1 border-gray-500"></p>}
-          </div>
-
+          
+          {results.length > 0 ? 
+            <div className='flex items-center'>
+              {results.length > 0 ? <p className="text-gray-700">Page: &nbsp;</p> : <></>}
+              {!isLoading ? <p className='text-gray-700'>{page}</p> : <p className="animate-spin rounded-full h-4 w-4 border-t-white border-1 border-gray-500"></p>}
+            </div>
+          : <></>}
+          
         </div>
 
         {isLoading ? (
           <>
-            <div className="animate-spin rounded-full h-6 w-6 border-t-white border-2 border-gray-500 justify-self-center mb-2 mt-50"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-t-white border-2 border-gray-500 justify-self-center mb-2 mt-30"></div>
             <p className="text-gray-500 mt-2 justify-self-center">กำลังโหลด</p>
           </>
         ) : results.length > 0 ? (
@@ -171,7 +174,7 @@ function JobSearch() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500 mt-2 justify-self-center">No results found.</p>
+          <p className="text-gray-500 mt-30 justify-self-center">No results found.</p>
         )}
       </div>
     </div>
