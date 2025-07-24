@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SideBar from './SideBsr';
 
 function JobSearch() {
   const [keyword, setKeyword] = useState('');
@@ -40,9 +41,12 @@ function JobSearch() {
   };
 
   return (
-    <div className="p-4 max-w-xl mx-auto">
+    <div className="flex flex-col">
+      <SideBar/>
+      <div className="p-4 max-w-xl mx-auto">
+
       <h1 className="text-2xl font-bold mb-4 text-green-700 ml-4">Job Search</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 ">
         <div class="justify-self-center">
           <input
             type="text"
@@ -178,6 +182,8 @@ function JobSearch() {
         )}
       </div>
     </div>
+    </div>
+    
   );
 }
 
