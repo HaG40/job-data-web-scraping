@@ -13,11 +13,11 @@ function App() {
     <>
     <div id='header' className='bg-green-500 text-white sticky top-0 w-full h-15 flex justify-between shadow items-center'>
       <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER</h1>
-      <div className='flex gap-4 items-center text-lg pr-5'>
+      <div className='flex gap-4 items-center text-lg pr-5' >
         <div className='h-full border-e-1 opacity-45 content-center relative mx-1'></div>
-        <button onClick={() => setActiveComponent('search')}>ค้นหางาน</button>
+        <button onClick={() => setActiveComponent('search')} className='cursor-pointer'>ค้นหางาน</button>
         <div className='h-full border-e-1 opacity-45 content-center relative mx-1'></div>
-        <button onClick={() => setActiveComponent('login')}>Login</button>
+        <button onClick={() => setActiveComponent('login')} className='cursor-pointer'>Login</button>
       </div>
 
     </div>
