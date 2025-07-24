@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import SideBar from './SideBsr';
-
 function JobSearch() {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
@@ -14,11 +12,16 @@ function JobSearch() {
     await fetchResults(1); // Reset to page 1 on new search
   };
 
-  const fetchResults = async (targetPage = page) => {
+const handleSidebarClick =(kw) => {
+  setKeyword(kw);
+  fetchResults(1, kw); // Call fetchResults with page 1 and the clicked keyword
+};
+
+  const fetchResults = async (targetPage = page, kw = keyword) => {
     setIsLoading(true);
     document.body.style.cursor = "progress"
     const params = new URLSearchParams({
-      keyword,
+      keyword: kw,
       page: targetPage.toString(),
       bkk: bkkOnly.toString(),
       source,
@@ -183,8 +186,64 @@ function JobSearch() {
       </div>
     </div>
     </div>
-    
   );
+  
+  function SideBar() { 
+
+      const categoryList = ["กฏหมาย","การศึกษา/วิชาการ","การแพทย์","งานบริการ","ช่าง/ช่างเทคนิค","บัญชี","มนุษยศาสตร์/ล่าม","วิศวกรรม","โฆษณา/สื่อ","ไอที"]
+      const jobList = [["ทนายความ","นักกฏหมาย","นิติกร"],
+                      ["ครู","บรรณารักษ์","อาจารย์","ติวเตอร์ "],
+                      ["ทันตแพทย์","เทคนิคการแพทย์","สัตวแพทย์","เภสัชกรรม","พยาบาลวิชาชีพ",],
+                      ["พนักงานต้อนรับ","พนักงานบริการ","แม่บ้าน","บาริสต้า"],
+                      ["ช่างไฟฟ้า","ช่างยนต์","ช่างแอร์"],
+                      ["พนักงานบัญชี","ผู้ตรวจสอบบัญชี","เจ้าหน้าที่การเงิน"],
+                      ["ล่ามภาษาอังกฤษ","ล่ามภาษาจีน","เจ้าหน้าที่สื่อสารองค์กร"],
+                      ["วิศวกรเขียนแบบ","วิศวกรไฟฟ้า","วิศวกรเครื่องกล","วิศวกรโยธา"],
+                      ["นักออกแบบกราฟิก","ครีเอทีฟ"],
+                      ["Developer","Software Engineer","System Analyst","Data Analyst"]]
+
+      return (
+          <div id="sidebar" className="h-screen w-50 fixed bg-gray-50 border-e border-gray-200 shadow flex items-center flex-col overflow-y-auto pb-50">
+              <div id="category-list" className="h-auto border-b border-gray-300 flex justify-center items-center w-full pt-4 bg-yellow-100 sticky top-0 rounded-b-lg shadow">
+                  <h2 className="flex pb-5 text-green-800 font-medium">ประเภทงานแนะนำ</h2>
+              </div>
+              {categoryList.map((category,index) => (
+                  <CategoryItemComponent index={index+1} value={category} jobItems={jobList[index]} />    
+              ))}
+          </div>
+      )
+  }
+
+  function CategoryItemComponent(props) {
+      const [isOpen, setIsOpen] = useState(false)
+
+      const handleClick = () => {
+          setIsOpen(!isOpen)
+      }
+
+      return (
+          <div id= {"category-"+props.index} className="border-b border-gray-300 flex flex-col w-full">
+              <ul 
+                  className="border-b border-gray-300 pb-3 pt-3 flex text-green-700 justify-center items-center cursor-pointer hover:bg-yellow-50 hover:text-yellow-800"
+                  onClick={handleClick}    
+              >{props.value}</ul>
+              {isOpen && (
+                  <ul>
+                      {props.jobItems.map((item,i) => (
+                        <li 
+                          className="p-1.5 pl-2 cursor-pointer text-gray-500 border-b border-gray-200 hover:text-emerald-800"
+                          onClick={() => handleSidebarClick(item)}
+                        >
+                          {(item)}
+                        </li>  
+                      ))}
+                  </ul>
+              )}
+          </div>
+      )
+  }
 }
+
+
 
 export default JobSearch;

@@ -37,7 +37,7 @@ func ScrapingJobthai(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 	c := colly.NewCollector(colly.AllowedDomains("www.jobthai.com", "jobthai.com"))
 
 	c.OnError(func(_ *colly.Response, err error) {
-		fmt.Printf("JobBKK scraping error: %v\n", err)
+		fmt.Printf("JobThai scraping error: %v\n", err)
 	})
 
 	c.OnHTML("a[ga-name]", func(h *colly.HTMLElement) {

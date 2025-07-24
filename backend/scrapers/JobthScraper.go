@@ -39,7 +39,7 @@ func ScrapingJobTH(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 	c := colly.NewCollector(colly.AllowedDomains("www.jobth.com", "jobth.com"))
 
 	c.OnError(func(_ *colly.Response, err error) {
-		fmt.Printf("JobBKK scraping error: %v\n", err)
+		fmt.Printf("JobTH scraping error: %v\n", err)
 	})
 
 	c.OnHTML("div.w3-hover-shadow", func(h *colly.HTMLElement) {
