@@ -126,7 +126,7 @@ const handleSidebarClick =(kw) => {
                   key={index}
                   className="pb-5 pr-5 pl-5 pt-3 border border-gray-200 rounded-2xl shadow-sm bg-white"
                 >
-                  <h3 className="text-lg font-bold text-green-700">
+                  <h3 className="text-lg font-bold text-green-600">
                     {job.title}
                   </h3>
 
@@ -153,7 +153,7 @@ const handleSidebarClick =(kw) => {
 
                   <p className="mt-1 text-gray-700 float-right">
                     <span className="font-semibold">ที่มา:</span>{' '}
-                    <span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
+                    <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">
                       {job.source}
                     </span>
                   </p>
@@ -197,7 +197,7 @@ const handleSidebarClick =(kw) => {
                       ["พนักงานต้อนรับ","พนักงานบริการ","แม่บ้าน","บาริสต้า"],
                       ["ช่างไฟฟ้า","ช่างยนต์","ช่างแอร์"],
                       ["พนักงานบัญชี","ผู้ตรวจสอบบัญชี","เจ้าหน้าที่การเงิน"],
-                      ["ล่ามภาษาอังกฤษ","ล่ามภาษาจีน","เจ้าหน้าที่สื่อสารองค์กร"],
+                      ["ล่ามภาษาอังกฤษ","ล่ามภาษาจีน","ล่ามภาษาญี่ปุ่น"],
                       ["วิศวกรเขียนแบบ","วิศวกรไฟฟ้า","วิศวกรเครื่องกล","วิศวกรโยธา"],
                       ["นักออกแบบกราฟิก","ครีเอทีฟ"],
                       ["Developer","Software Engineer","System Analyst","Data Analyst"]]
@@ -205,7 +205,7 @@ const handleSidebarClick =(kw) => {
       return (
           <div id="sidebar" className="h-screen w-50 fixed bg-gray-50 border-e border-gray-200 shadow flex items-center flex-col overflow-y-auto pb-50">
               <div id="category-list" className="h-auto border-b border-gray-300 flex justify-center items-center w-full pt-4 bg-yellow-100 sticky top-0 rounded-b-lg shadow">
-                  <h2 className="flex pb-5 text-green-800 font-medium">ประเภทงานแนะนำ</h2>
+                  <h2 className="flex pb-5 text-green-600 font-bold cursor-default">ประเภทงานแนะนำ</h2>
               </div>
               {categoryList.map((category,index) => (
                   <CategoryItemComponent index={index+1} value={category} jobItems={jobList[index]} />    
@@ -216,25 +216,30 @@ const handleSidebarClick =(kw) => {
 
   function CategoryItemComponent(props) {
       const [isOpen, setIsOpen] = useState(false)
+      const [isActive, setIsActive] = useState(false);
 
-      const handleClick = () => {
-          setIsOpen(!isOpen)
-      }
+    const handleClick = () => {
+        setIsOpen(!isOpen)
+        setIsActive(!isActive);
+    }
 
       return (
           <div id= {"category-"+props.index} className="border-b border-gray-300 flex flex-col w-full">
               <ul 
-                  className="border-b border-gray-300 pb-3 pt-3 flex text-green-700 justify-center items-center cursor-pointer hover:bg-yellow-50 hover:text-yellow-800"
+                  className={`border-b border-gray-300 pb-3 pt-3 flex  justify-center 
+                            items-center cursor-pointer 
+                            ${isActive ? "bg-green-600 text-white font-semibold" : "text-green-600 hover:font-semibold hover:bg-yellow-50 hover:text-green-600"}`}
                   onClick={handleClick}    
               >{props.value}</ul>
               {isOpen && (
                   <ul>
                       {props.jobItems.map((item,i) => (
                         <li 
-                          className="p-1.5 pl-2 cursor-pointer text-gray-500 border-b border-gray-200 hover:text-emerald-800"
-                          onClick={() => handleSidebarClick(item)}
+                          className="group flex p-1.5 pl-3 cursor-pointer text-gray-500 border-b border-gray-200 hover:text-emerald-500 hover:bg-green-50"
+                          onClick={(e) => 
+                            handleSidebarClick(item)}
                         >
-                          {(item)}
+                          <label className=' hidden group-hover:inline'>&#128269; &nbsp;</label> {(item)} 
                         </li>  
                       ))}
                   </ul>

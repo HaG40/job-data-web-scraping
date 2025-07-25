@@ -19,6 +19,13 @@ func contains(slice []string, value string) bool {
 	return false
 }
 
+func shuffle(data []scrapers.JobCard) {
+	randomizer := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randomizer.Shuffle(len(data), func(i, j int) {
+		data[i], data[j] = data[j], data[i]
+	})
+}
+
 func JobsHandler(w http.ResponseWriter, r *http.Request) {
 	// GET method
 	if r.Method == http.MethodGet {
@@ -84,6 +91,7 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			data = append(data, jobbkkData...)
 			data = append(data, jobthaiData...)
 			data = append(data, jobthData...)
+			shuffle(data)
 		}
 		if contains(source, "jobbkk") {
 			data = append(data, jobbkkData...)
@@ -94,11 +102,6 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 		if contains(source, "jobth") {
 			data = append(data, jobthData...)
 		}
-
-		randomizer := rand.New(rand.NewSource(time.Now().UnixNano()))
-		randomizer.Shuffle(len(data), func(i, j int) {
-			data[i], data[j] = data[j], data[i]
-		})
 
 		// convert to json
 		if len(data) == 0 {
