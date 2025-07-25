@@ -53,8 +53,10 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			scrapers.ScrapingJobTH,
 		}
 
+		var jobs []scrapers.JobCard
 		for i, scrape := range scraperFuncs {
-			jobs, err := scrape(keyword, page, bkkOnlyBool)
+			jobs = nil
+			jobs, err = scrape(keyword, page, bkkOnlyBool)
 			if err != nil {
 				log.Printf("Error scraping source #%d: %v", i+1, err)
 				scrapeErr++

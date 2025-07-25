@@ -11,9 +11,9 @@ function App() {
   
   return (
     <>
-    <div id='header' className='bg-green-500 text-white sticky top-0 w-full h-15 flex justify-between shadow items-center'>
+    <div id='header' className='bg-green-500 text-white sticky top-0 w-screen h-15 flex justify-between shadow items-center'>
       <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER</h1>
-      <div className='flex flex-row gap-4 items-center text-lg pr-5' >
+      <div className='flex flex-row gap-4 items-center text-lg pr-10' >
         <button onClick={() => setActiveComponent('search')} className='cursor-pointer'>ค้นหางาน</button>
         <button onClick={() => setActiveComponent('login')} className='cursor-pointer'>Login</button>
       </div>

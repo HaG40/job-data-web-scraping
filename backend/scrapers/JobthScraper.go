@@ -19,6 +19,7 @@ func ScrapingJobTH(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 	}
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
+	encodedKeywrd := url.QueryEscape(keywrd)
 	pageStr := strconv.Itoa(page)
 
 	var scrapeURL string
@@ -30,9 +31,9 @@ func ScrapingJobTH(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 		}
 	} else {
 		if onlyBKK {
-			scrapeURL = "https://www.jobth.com/searchjob2.php?city=city00&keyword=" + keywrd + "&page=" + strconv.Itoa(page)
+			scrapeURL = "https://www.jobth.com/searchjob2.php?city=city00&keyword=" + encodedKeywrd + "&page=" + strconv.Itoa(page)
 		} else {
-			scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + keywrd + "&page=" + strconv.Itoa(page)
+			scrapeURL = "https://www.jobth.com/searchjob2.php?keyword=" + encodedKeywrd + "&page=" + strconv.Itoa(page)
 		}
 	}
 

@@ -2,6 +2,7 @@ package scrapers
 
 import (
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -36,6 +37,7 @@ func ScrapingJobbkk(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 	}
 
 	keywrd = strings.Join((strings.Split(strings.TrimSpace(keywrd), " ")), "+")
+	encodedKeywrd := url.QueryEscape(keywrd)
 	pageStr := strconv.Itoa(page)
 
 	var scrapeURL string
@@ -47,9 +49,9 @@ func ScrapingJobbkk(keywrd string, page int, onlyBKK bool) ([]JobCard, error) {
 		}
 	} else {
 		if onlyBKK {
-			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + encodedKeywrd + "?province_id=246"
 		} else {
-			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + keywrd + "?province_id=246"
+			scrapeURL = "https://www.jobbkk.com/jobs/lists/" + pageStr + "/หางาน," + encodedKeywrd
 		}
 	}
 
