@@ -8,17 +8,17 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
-
-func Connect() {
+func Connect() *gorm.DB {
 	dsn := "host=localhost user=postgres password=JorJayDB dbname=UsersDB port=5432 sslmode=disable TimeZone=Asia/Bangkok"
 
-	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("Database connection failed to initialize")
-		return
+		return nil
 	}
 
-	DB.AutoMigrate(models.User{})
+	db.AutoMigrate(models.User{})
+
+	return db
 }
