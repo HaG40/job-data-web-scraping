@@ -70,6 +70,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Error loading .env file")
 	}
 
+	type LoginRequest struct {
+		EmailOrUsername string `json:"user"`
+		Password        string `json:"password"`
+	}
+
 	if DB == nil {
 		db := database.Connect()
 		DB = db
@@ -77,10 +82,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 
-		type LoginRequest struct {
-			EmailOrUsername string `json:"user"`
-			Password        string `json:"password"`
-		}
 		var loginRequest LoginRequest
 		if err := json.NewDecoder(r.Body).Decode(&loginRequest); err != nil {
 			http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
@@ -144,11 +145,47 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 func User(w http.ResponseWriter, r *http.Request) {
 
+	type Profile struct {
+		Username    string `json:"username:"`
+		Email       string `json:"email"`
+		Description string `json:"description"`
+	}
+
+	if r.Method == http.MethodGet {
+		userID, valid := r.Context().Value("userID").(string)
+		if !valid {
+			http.Error(w, "User ID not found in context", http.StatusInternalServerError)
+			return
+		}
+
+		userIDString, err := strconv.ParseUint(userID, 10, 64)
+		if err != nil {
+			http.Error(w, "Invalid User ID", http.StatusBadRequest)
+			return
+		}
+
+		var user models.User
+		findUser := DB.First(&user, userIDString)
+		if findUser.Error != nil {
+			http.Error(w, "User ID not found", http.StatusNotFound)
+			return
+		}
+
+		var profile Profile
+		profile.Username, profile.Email, profile.Description = user.Username, user.Email, user.Description
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(profile)
+
+	} else {
+		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
+		return
+	}
 }
 
 func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
-	if !ok {
+	userID, valid := r.Context().Value("userID").(string)
+	if !valid {
 		http.Error(w, "User ID not found in context", http.StatusInternalServerError)
 		return
 	}
