@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -102,7 +103,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-			Issuer:    "myapp",
+			Issuer:    strconv.Itoa(int(user.ID)),
 			Subject:   "user_" + user.Username,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
@@ -120,12 +121,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.SetCookie(w, &http.Cookie{
-			Name:     "jwt",
+			Name:     "access-token",
 			Value:    token,
 			HttpOnly: true,
 			Secure:   true,
 			Path:     "/",
-			MaxAge:   7200,
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   int(time.Now().Add(time.Hour * 24).Unix()),
 		})
 
 		user.Password = ""
@@ -138,4 +140,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func User(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		http.Error(w, "User ID not found in context", http.StatusInternalServerError)
+		return
+	}
+	w.Write([]byte("User ID " + userID + "authorized"))
 }
