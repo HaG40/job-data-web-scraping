@@ -184,10 +184,35 @@ func User(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
-	userID, valid := r.Context().Value("userID").(string)
-	if !valid {
-		http.Error(w, "User ID not found in context", http.StatusInternalServerError)
+	if r.Method == http.MethodGet {
+		userID, valid := r.Context().Value("userID").(string)
+		if !valid {
+			http.Error(w, "User ID not found in context", http.StatusInternalServerError)
+			return
+		}
+		w.Write([]byte("User ID " + userID + " authorized"))
+	} else {
+		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	w.Write([]byte("User ID " + userID + "authorized"))
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		http.SetCookie(w, &http.Cookie{
+			Name:     "access-token",
+			Value:    "",
+			HttpOnly: true,
+			Secure:   true,
+			Path:     "/",
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   -1,
+		})
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Logged out"))
+	} else {
+		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
+		return
+	}
 }
