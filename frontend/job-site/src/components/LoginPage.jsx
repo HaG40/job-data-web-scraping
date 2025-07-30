@@ -5,14 +5,30 @@ import { Link } from 'react-router-dom';
 
 function LoginPage() {
 
-    const [username, setUsername] = useState('')
+    const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
     const [show, setShow] = useState(false)
+    const [redirect, setRedirect] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // await fetchResults(1); 
-    };
+       const res = await fetch("http://localhost:8888/auth/login", {
+            method : "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                user,
+                password
+            })
+       })
+       const content = await res.json();
+       console.log(content)
+
+       setRedirect(!redirect)
+    }
+    
+    if (redirect){
+        return <Navigate to="/login"/>
+    }
 
     return (
         <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15'>
@@ -22,8 +38,8 @@ function LoginPage() {
                     <label className='mb-2'>อีเมลล์ / ชื่อผู้ใช้ :</label>
                     <input 
                         type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={user}
+                        onChange={(e) => setUser(e.target.value)}
                         className={`border p-2 rounded w-85 mb-4 ` }
                         placeholder='example@gmail.com'
                     />
