@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 function RegisterPage() {
 
@@ -8,11 +8,28 @@ function RegisterPage() {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [show, setShow] = useState(false)
+    const [redirect, setRedirect] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // await fetchResults(1); 
-    };
+       const res = await fetch("http://localhost:8888/auth/register", {
+            method : "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                username,
+                email,
+                password
+            })
+       })
+       const content = await res.json();
+       console.log(content)
+
+       setRedirect(!redirect)
+    }
+    
+    if (redirect){
+        return <Navigate to="/login"/>
+    }
 
     return (
         <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15'>
