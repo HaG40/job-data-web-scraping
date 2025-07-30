@@ -65,7 +65,7 @@ const handleSidebarClick =(kw) => {
           className={`${isLoading ? "cursor-progress" : "cursor-default"} bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer`}
           disabled={isLoading}
         >
-          {isLoading ? "Loading..." : "Search"}
+          ค้นหา
         </button>
 
 
