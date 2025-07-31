@@ -50,7 +50,7 @@ const handleSidebarClick =(kw) => {
 
       <h1 className="text-2xl font-bold mb-4 text-green-700 ml-4">Job Search</h1>
       <form onSubmit={handleSubmit} className="space-y-4 ">
-        <div class="justify-self-center">
+        <div className="justify-self-center">
           <input
             type="text"
             value={keyword}
@@ -72,7 +72,7 @@ const handleSidebarClick =(kw) => {
         </div>
 
         <div className="flex items-center ml-4">
-        <label class="mr-2">แหล่งที่มา:</label>
+        <label className="mr-2">แหล่งที่มา:</label>
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}

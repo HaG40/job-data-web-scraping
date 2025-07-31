@@ -12,7 +12,7 @@ function RegisterPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       const res = await fetch("http://localhost:8888/auth/register", {
+       const res = await fetch("http://localhost:8888/api/register", {
             method : "POST",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
@@ -21,8 +21,8 @@ function RegisterPage() {
                 password
             })
        })
-       const content = await res.json();
-       console.log(content)
+       const data = await res.json();
+       console.log(data)
 
        setRedirect(!redirect)
     }
@@ -32,7 +32,7 @@ function RegisterPage() {
     }
 
     return (
-        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15'>
+        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15 shadow'>
             <h1 className="text-3xl font-bold mb-6 text-green-700">ลงทะเบียน</h1>
             <form onSubmit={handleSubmit}>
                 <div className='justify-self-center flex flex-col'>

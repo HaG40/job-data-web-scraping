@@ -21,6 +21,15 @@ var DB *gorm.DB
 
 func Register(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	if DB == nil {
 		db := database.Connect()
 		DB = db
@@ -64,6 +73,15 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
 	err := godotenv.Load()
 	if err != nil {
@@ -133,7 +151,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 		user.Password = ""
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(user)
+		// json.NewEncoder(w).Encode(user)
 		json.NewEncoder(w).Encode(token)
 		w.WriteHeader(http.StatusOK)
 
@@ -146,7 +164,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func User(w http.ResponseWriter, r *http.Request) {
 
 	type Profile struct {
-		Username    string `json:"username:"`
+		Username    string `json:"username"`
 		Email       string `json:"email"`
 		Description string `json:"description"`
 	}
@@ -176,6 +194,7 @@ func User(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(profile)
+		w.WriteHeader(http.StatusOK)
 
 	} else {
 		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
@@ -191,6 +210,7 @@ func ProtectedHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		w.Write([]byte("User ID " + userID + " authorized"))
+		w.WriteHeader(http.StatusOK)
 	} else {
 		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
 		return

@@ -12,26 +12,27 @@ function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       const res = await fetch("http://localhost:8888/auth/login", {
+       const res = await fetch("http://localhost:8888/api/login", {
             method : "POST",
             headers: {"Content-Type" : "application/json"},
+            credentials: "include",
             body: JSON.stringify({
                 user,
                 password
             })
        })
-       const content = await res.json();
-       console.log(content)
+       const data = await res.json();
+       console.log(data)
 
        setRedirect(!redirect)
     }
     
     if (redirect){
-        return <Navigate to="/login"/>
+        return <Navigate to="/search"/>
     }
 
     return (
-        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15'>
+        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15 shadow'>
             <h1 className="text-3xl font-bold mb-6 text-green-700">เข้าสู่ระบบ</h1>
             <form onSubmit={handleSubmit}>
                 <div className='justify-self-center flex flex-col'>

@@ -12,10 +12,10 @@ func SetUpRoutes() {
 	http.Handle("/api/jobs", middleware.JobMiddleware(jobsController))
 
 	// Authentication Routes
-	http.HandleFunc("/auth/register", controller.Register)
-	http.HandleFunc("/auth/login", controller.Login)
-	http.Handle("/auth/protected", middleware.AuthMiddleware(http.HandlerFunc(controller.ProtectedHandler)))
-	http.Handle("/auth/user", middleware.AuthMiddleware(http.HandlerFunc(controller.User)))
-	http.Handle("/auth/logout", middleware.AuthMiddleware(http.HandlerFunc(controller.Logout)))
+	http.HandleFunc("/api/register", controller.Register)
+	http.HandleFunc("/api/login", controller.Login)
+	http.Handle("/api/protected", middleware.AuthMiddleware(http.HandlerFunc(controller.ProtectedHandler)))
+	http.Handle("/api/user", middleware.AuthMiddleware(http.HandlerFunc(controller.User)))
+	http.Handle("/api/logout", middleware.AuthMiddleware(http.HandlerFunc(controller.Logout)))
 
 }
