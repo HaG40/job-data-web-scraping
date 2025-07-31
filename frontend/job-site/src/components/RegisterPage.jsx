@@ -41,16 +41,16 @@ function RegisterPage() {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4 ` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder='username'
                     />
 
                     <label className='mb-2'>อีเมลล์ :</label>
                     <input 
-                        type="text"
+                        type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4 ` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder='example@gmail.com'
                     />
 
@@ -69,7 +69,7 @@ function RegisterPage() {
                         type={show ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder={show ? 'Password1234 ': '************'}
                         
                     />
@@ -78,7 +78,7 @@ function RegisterPage() {
                         type={show ? "text" : "password"}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder={show ? 'Password1234 ': '************'}
                         
                     />

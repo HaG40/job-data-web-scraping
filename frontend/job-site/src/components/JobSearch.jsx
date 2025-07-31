@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+
 function JobSearch() {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
@@ -34,6 +36,7 @@ const handleSidebarClick =(kw) => {
       const data = await res.json();
       setResults(data);
       setPage(targetPage);
+      
     } catch (err) {
       console.error("Fetch error:", err);
       setResults([]);
@@ -55,14 +58,14 @@ const handleSidebarClick =(kw) => {
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className={`${!isLoading ? "cursor-text ": "cursor-progress"} border p-2 rounded w-106 mr-1` }
+            className={`${!isLoading ? "cursor-text ": "cursor-progress"} border border-gray-400 p-2 rounded w-106 mr-1 shadow` }
             disabled={isLoading}
             placeholder={!isLoading ? 'ค้นหางานที่ตามหา...' : "กำลังค้นหางาน..."}
           />
 
         <button
           type="submit"
-          className={`${isLoading ? "cursor-progress" : "cursor-default"} bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer`}
+          className={`${isLoading ? "cursor-progress" : "cursor-default"} bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow`}
           disabled={isLoading}
         >
           ค้นหา
@@ -76,7 +79,7 @@ const handleSidebarClick =(kw) => {
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            className="border p-1 mr-4 rounded w-35 cursor-pointer"
+            className="border p-1 mr-4 rounded w-35 cursor-pointer shadow border-gray-400 text-gray-500"
             disabled={isLoading}
           >
             <option value="all">ทั้งหมด</option>
@@ -102,7 +105,7 @@ const handleSidebarClick =(kw) => {
 
       <div className="mt-6">
         <div className='flex justify-between'> 
-          <h2 className="text-xl font-semibold flex items-center">Results:</h2>
+          <h2 className="text-xl font-semibold flex items-center">ผลการค้นหา:</h2>
           
           {results.length > 0 ? 
             <div className='flex items-center'>
@@ -166,7 +169,7 @@ const handleSidebarClick =(kw) => {
               <button
                 onClick={() => fetchResults(page - 1)}
                 disabled={page <= 1 || isLoading}
-                className="px-3 py-1 bg-green-600 text-white text-xl rounded hover:bg-gray-400 disabled:opacity-50"
+                className="px-4 pt-0 pb-1 bg-green-600 text-white text-2xl rounded hover:bg-gray-400 disabled:opacity-50 shadow cursor-pointer"
               >
                 &#8592;
               </button>
@@ -174,14 +177,14 @@ const handleSidebarClick =(kw) => {
               <button
                 onClick={() => fetchResults(page + 1)}
                 disabled={isLoading}
-                className="px-3 py-1 bg-green-600 text-white text-xl rounded hover:bg-gray-400 disabled:opacity-50"
+                className="px-4 pt-0 pb-1 bg-green-600 text-white text-2xl rounded hover:bg-gray-400 disabled:opacity-50 shadow cursor-pointer"
               >
                 &#8594;
               </button>
             </div>
           </>
         ) : (
-          <p className="text-gray-500 mt-30 justify-self-center">No results found.</p>
+          <p className="text-gray-500 mt-30 justify-self-center">ไม่พบข้อมูล</p>
         )}
       </div>
     </div>

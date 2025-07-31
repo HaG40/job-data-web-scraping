@@ -3,29 +3,15 @@ import JobSearch from './components/JobSearch'
 import LoginPage from './components/LoginPage'
 import RegisterPage from './components/RegisterPage'
 import UserPage from './components/UserPage';
+import Logout from './components/Logout';
+import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react'
-import React from 'react';
-
 
 
 function App() {
 
   const [isAuthenticated, setIsAuthenticated] = useState()
   const [username, setUsername] = useState('')
-
-  useEffect(() => {
-  fetch("http://localhost:8888/api/protected", { credentials: "include" })
-    .then(res => {
-      if (res.ok) {
-        setIsAuthenticated(true);
-        console.log("Authorized")
-      } else {
-        setIsAuthenticated(false);
-        console.log("Unauthorized")
-      }
-    }
-  );
-  }, []);
 
   useEffect( () => {
   fetch("http://localhost:8888/api/user", { headers: {"Content-Type" : "application/json"} ,credentials: "include" })
@@ -37,6 +23,25 @@ function App() {
           console.log("Failed fetching user data")
       }
       })
+  }, []);
+
+  useEffect(() => {
+  fetch("http://localhost:8888/api/protected", { credentials: "include" })
+    .then(async res => {
+      if (res.ok) {
+        setIsAuthenticated(true);
+        console.log("Authorized")
+
+        if (username != '') {
+          toast.success(`ยินดีต้อนรับ ${username}`)
+        }      
+
+      } else {
+        setIsAuthenticated(false);
+        console.log("Unauthorized")
+      }
+    }
+  );
   }, []);
   
   return (
@@ -64,7 +69,16 @@ function App() {
           <Route path="/login" element={<LoginPage />} /> 
           <Route path="/register" element={<RegisterPage />} /> 
           <Route path="/user" element={<UserPage />} /> 
+          <Route path="/logout" element={<Logout />} /> 
         </Routes>
+
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2500}
+          closeOnClick
+          pauseOnHover
+          theme="light"
+        />
     </>
         
   )

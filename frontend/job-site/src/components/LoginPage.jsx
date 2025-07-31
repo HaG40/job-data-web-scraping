@@ -41,7 +41,7 @@ function LoginPage() {
                         type="text"
                         value={user}
                         onChange={(e) => setUser(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4 ` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder='example@gmail.com'
                     />
                     <div className='flex flex-row justify-between'>
@@ -59,12 +59,12 @@ function LoginPage() {
                         type={show ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className={`border p-2 rounded w-85 mb-4` }
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder={show ? 'Password1234 ': '************'}
                         
                     />
 
-                    <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer'>ล็อกอิน</button>
+                    <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow'>ล็อกอิน</button>
                     <Link to="/register" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>ไม่มีบัญชีผู้ใช้?</Link>
                 </div>
             </form>
