@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 
@@ -7,8 +8,9 @@ function LoginPage() {
 
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
-    const [show, setShow] = useState(false)
+    const [showPass, setShowPass] = useState(false)
     const [redirect, setRedirect] = useState(false)
+    const [errormsg, setErrormsg] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,14 +23,21 @@ function LoginPage() {
                 password
             })
        })
-       const data = await res.json();
-       console.log(data)
-
-       setRedirect(!redirect)
+       if (!res.ok){
+        const err = await res.text()
+        setErrormsg(err)
+        return
+       }else {
+        toast.success("เข้าสู่ระบบสำเร็จ", {position: "bottom-center", hideProgressBar: true,})
+                
+        setTimeout(() => {
+            setRedirect(true);
+        }, 2000);
+        }
     }
     
-    if (redirect){
-        return <Navigate to="/search"/>
+    if (redirect){        
+        window.location.replace("/search");
     }
 
     return (
@@ -36,7 +45,11 @@ function LoginPage() {
             <h1 className="text-3xl font-bold mb-6 text-green-700">เข้าสู่ระบบ</h1>
             <form onSubmit={handleSubmit}>
                 <div className='justify-self-center flex flex-col'>
-                    <label className='mb-2'>อีเมลล์ / ชื่อผู้ใช้ :</label>
+                    <div className='flex flex-row'>
+                        {errormsg != "" && user == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='flex mb-2'>อีเมลล์ / ชื่อผู้ใช้ :</label>
+
+                    </div>
                     <input 
                         type="text"
                         value={user}
@@ -45,24 +58,29 @@ function LoginPage() {
                         placeholder='example@gmail.com'
                     />
                     <div className='flex flex-row justify-between'>
-                        <label className='mb-2'>รหัสผ่าน :</label>
+                        <div className='flex flex-row'>
+                            {errormsg != "" && password == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                            <label className='mb-2'>รหัสผ่าน :</label>
+                        </div>
                         <button
                             type="button"
-                            onClick={() => setShow(!show)}
+                            onClick={() => setShowPass(!showPass)}
                             className="flex justify-end cursor-pointer hover:underline text-gray-400 mr-1"
                         >
-                            {show ? "ซ่อน" : "แสดง"}
+                            {showPass ? "ซ่อน" : "แสดง"}
                         </button>
                     </div>
 
                     <input 
-                        type={show ? "text" : "password"}
+                        type={showPass ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
-                        placeholder={show ? 'Password1234 ': '************'}
+                        placeholder={showPass ? 'Password1234 ': '************'}
                         
                     />
+
+                    {errormsg != ""  ? <label className='text-red-500 '>** {errormsg}</label>:<></>}
 
                     <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow'>ล็อกอิน</button>
                     <Link to="/register" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>ไม่มีบัญชีผู้ใช้?</Link>

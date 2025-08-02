@@ -43,7 +43,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if user.Username == "" || user.Email == "" || user.Password == "" {
-			http.Error(w, "All fields are required", http.StatusBadRequest)
+			http.Error(w, "โปรดกรอกข้อมูลให้ครบถ้วน", http.StatusBadRequest)
 			return
 		}
 
@@ -106,19 +106,26 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if loginRequest.EmailOrUsername == "" || loginRequest.Password == "" {
+			http.Error(w, "โปรดกรอกข้อมูลให้ครบถ้วน", http.StatusBadRequest)
+			return
+		}
+
 		var user models.User
 		authenticateUser := DB.Where("email = ? OR username = ?", loginRequest.EmailOrUsername, loginRequest.EmailOrUsername).First(&user)
 		if authenticateUser.Error != nil {
 			if errors.Is(authenticateUser.Error, gorm.ErrRecordNotFound) {
-				http.Error(w, "Username or email not found", http.StatusNotFound)
+				http.Error(w, "ไม่พบอีเมลล์/ชื่อผู้ใช้ หรือ รหัสผ่าน", http.StatusNotFound)
 				return
 			} else {
-				http.Error(w, "Error occurs", http.StatusInternalServerError)
+				http.Error(w, "เกิดข้อผิดพลาด", http.StatusInternalServerError)
+				return
 			}
 		}
 
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password)); err != nil {
-			http.Error(w, "Incorrect password", http.StatusBadRequest)
+			http.Error(w, "รหัสผ่านไม่ถูกต้อง", http.StatusBadRequest)
+			return
 		}
 
 		claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
@@ -131,6 +138,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		secret := os.Getenv("SECRET_KEY")
 		if secret == "" {
 			log.Fatal("Secret key is not set")
+			return
 		}
 
 		token, err := claims.SignedString([]byte(secret))
@@ -232,7 +240,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("Logged out"))
 	} else {
-		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }

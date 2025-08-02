@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function RegisterPage() {
 
@@ -7,8 +8,9 @@ function RegisterPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [show, setShow] = useState(false)
+    const [showPass, setShowPass] = useState(false)
     const [redirect, setRedirect] = useState(false)
+    const [errormsg, setErrormsg] = useState('')
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,14 +23,21 @@ function RegisterPage() {
                 password
             })
        })
-       const data = await res.json();
-       console.log(data)
-
-       setRedirect(!redirect)
+       if (!res.ok){
+        const err = res.text()
+        setErrormsg(err)
+        return
+       } else {
+        toast.success("ลงทะเบียนผู้ใช้สำเร็จ", {position: "bottom-center", hideProgressBar: true,});
+              
+        setTimeout(() => {
+            setRedirect(true);
+        }, 2000);
+       }
     }
     
     if (redirect){
-        return <Navigate to="/login"/>
+        window.location.replace("/login");
     }
 
     return (
@@ -36,7 +45,10 @@ function RegisterPage() {
             <h1 className="text-3xl font-bold mb-6 text-green-700">ลงทะเบียน</h1>
             <form onSubmit={handleSubmit}>
                 <div className='justify-self-center flex flex-col'>
-                    <label className='mb-2'>ชื่อผู้ใช้ :</label>
+                    <div className='flex flex-row'>
+                        {errormsg != "" && username == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='mb-2'>ชื่อผู้ใช้ :</label>
+                    </div>            
                     <input 
                         type="text"
                         value={username}
@@ -44,8 +56,10 @@ function RegisterPage() {
                         className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder='username'
                     />
-
-                    <label className='mb-2'>อีเมลล์ :</label>
+                    <div className='flex flex-row'>
+                        {errormsg != "" && email == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='mb-2'>อีเมลล์ :</label>
+                    </div>
                     <input 
                         type="email"
                         value={email}
@@ -55,35 +69,43 @@ function RegisterPage() {
                     />
 
                     <div className='flex flex-row justify-between'>
-                        <label className='mb-2'>รหัสผ่าน :</label>
+                        <div className='flex flex-row'>
+                            {errormsg != "" && password == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                            <label className='mb-2'>รหัสผ่าน :</label>
+                        </div>
                         <button
                             type="button"
-                            onClick={() => setShow(!show)}
+                            onClick={() => setShowPass(!showPass)}
                             className="flex justify-end cursor-pointer hover:underline text-gray-400 mr-1"
                         >
-                            {show ? "ซ่อน" : "แสดง"}
+                            {showPass ? "ซ่อน" : "แสดง"}
                         </button>
                     </div>
 
                     <input 
-                        type={show ? "text" : "password"}
+                        type={showPass ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
-                        placeholder={show ? 'Password1234 ': '************'}
+                        placeholder={showPass ? 'Password1234 ': '************'}
                         
                     />
-                    <label className='mb-2'>ยืนยันรหัสผ่าน :</label>
+                    <div className='flex flex-row'>
+                        {errormsg != "" && confirmPassword == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='mb-2'>ยืนยันรหัสผ่าน :</label>
+                    </div>
                     <input 
-                        type={show ? "text" : "password"}
+                        type={showPass ? "text" : "password"}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
-                        placeholder={show ? 'Password1234 ': '************'}
+                        placeholder={showPass ? 'Password1234 ': '************'}
                         
                     />
-
+                    
+                    {errormsg != ""  ? <label className='text-red-500 '>** {errormsg}</label>:<></>}
                     {password !== '' && confirmPassword !== '' && password !== confirmPassword ? <label className='text-red-500 '>** โปรดใส่รหัสผ่านให้ตรงกัน</label>:<></>}
+                    
 
                     <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer'>ลงทะเบียน</button>
                     <Link to="/login" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>มีบัญชีผู้ใช้อยู่แล้ว</Link>

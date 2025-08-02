@@ -1,4 +1,4 @@
-import {Routes, Route, Link, data } from 'react-router-dom';
+import {Routes, Route, Link, Navigate } from 'react-router-dom';
 import JobSearch from './components/JobSearch'
 import LoginPage from './components/LoginPage'
 import RegisterPage from './components/RegisterPage'
@@ -71,6 +71,7 @@ function App() {
           <Route path="/user" element={<UserPage />} /> 
           <Route path="/logout" element={<Logout />} /> 
         </Routes>
+
 
         <ToastContainer
           position="bottom-right"
