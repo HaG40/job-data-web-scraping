@@ -40,11 +40,13 @@ function UserPage() {
                 </div>
 
                 <br />
-                <div className='ml-4 flex flex-col'>
+                <div className='ml-4 flex flex-col space-y-2'>
                     <label><b>ชื่อ</b> : {name}</label>
                     <label><b>อายุ</b> : {age}</label>
                     <label><b>อีเมลล์</b> : {email}</label>
-                    <label><b>รายละเอียด</b> : {description == "" ? <p className='text-gray-500 ml-4 mt-3'>(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์</p>:{description}}</label>
+                    <div><b>รายละเอียด</b> : 
+                        {description == "" ? <p className='text-gray-500 ml-4 mt-3'>(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์</p>:{description}}
+                    </div>
                 </div>
 
             
