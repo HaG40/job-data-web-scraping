@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom"
 import { toast } from 'react-toastify';
 
 
@@ -18,7 +17,7 @@ function Logout(){
             console.log("Logged out")
             setTimeout(() => {               
                 window.location.replace("/search");
-            }, 2000);
+            }, 1000);
 
         } else {
             toast.error("ออกจากระบบไม่สำเร็จ")

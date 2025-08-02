@@ -42,7 +42,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if user.Username == "" || user.Email == "" || user.Password == "" {
+		if user.Username == "" || user.Email == "" || user.Password == "" || user.FirstName == "" || user.LastName == "" || user.DateOfBirth == "" {
 			http.Error(w, "โปรดกรอกข้อมูลให้ครบถ้วน", http.StatusBadRequest)
 			return
 		}
@@ -173,6 +173,9 @@ func User(w http.ResponseWriter, r *http.Request) {
 
 	type Profile struct {
 		Username    string `json:"username"`
+		FirstName   string `json:"first_name"`
+		LastName    string `json:"last_name"`
+		DateOfBirth string `json:"date_of_birth"`
 		Email       string `json:"email"`
 		Description string `json:"description"`
 	}
@@ -198,7 +201,7 @@ func User(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var profile Profile
-		profile.Username, profile.Email, profile.Description = user.Username, user.Email, user.Description
+		profile.Username, profile.FirstName, profile.LastName, profile.DateOfBirth, profile.Email, profile.Description = user.Username, user.FirstName, user.LastName, user.DateOfBirth, user.Email, user.Description
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(profile)

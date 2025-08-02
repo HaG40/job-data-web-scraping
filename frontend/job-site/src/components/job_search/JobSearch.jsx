@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { toast } from 'react-toastify';
+import { AuthContext } from '../../App';
+import FavoriteButton from './FavoriteButton';
+import { FaSearch } from 'react-icons/fa';
 
 function JobSearch() {
   const [keyword, setKeyword] = useState('');
@@ -8,6 +11,7 @@ function JobSearch() {
   const [source, setSource] = useState("all");
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated, username } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,25 +57,27 @@ const handleSidebarClick =(kw) => {
 
       <h1 className="text-2xl font-bold mb-4 text-green-700 ml-4">Job Search</h1>
       <form onSubmit={handleSubmit} className="space-y-4 ">
-        <div className="justify-self-center">
-          <input
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            className={`${!isLoading ? "cursor-text ": "cursor-progress"} border border-gray-400 p-2 rounded w-106 mr-1 shadow` }
+        <div className="justify-self-center flex flex-row">
+          <div className="relative w-full max-w-md mr-1">
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className={`${
+                !isLoading ? 'cursor-text' : 'cursor-progress'
+              } border border-gray-400 p-2 pl-10 rounded w-100 shadow`}
+              disabled={isLoading}
+              placeholder={!isLoading ? 'ค้นหางานที่ตามหา...' : 'กำลังค้นหางาน...'}
+            />
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
+          <button
+            type="submit"
+            className={`${isLoading ? "cursor-progress" : "cursor-default"} bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow`}
             disabled={isLoading}
-            placeholder={!isLoading ? 'ค้นหางานที่ตามหา...' : "กำลังค้นหางาน..."}
-          />
-
-        <button
-          type="submit"
-          className={`${isLoading ? "cursor-progress" : "cursor-default"} bg-green-600 text-white px-4 pr-5 pl-5 py-2 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow`}
-          disabled={isLoading}
-        >
-          ค้นหา
-        </button>
-
-
+          >
+            ค้นหา
+          </button>
         </div>
 
         <div className="flex items-center ml-4">
@@ -105,7 +111,7 @@ const handleSidebarClick =(kw) => {
 
       <div className="mt-6">
         <div className='flex justify-between'> 
-          <h2 className="text-xl font-semibold flex items-center">ผลการค้นหา:</h2>
+          <h2 className="text-xl font-semibold flex items-center text-green-700">ผลการค้นหา:</h2>
           
           {results.length > 0 ? 
             <div className='flex items-center'>
@@ -129,9 +135,13 @@ const handleSidebarClick =(kw) => {
                   key={index}
                   className="pb-5 pr-5 pl-5 pt-3 border border-gray-200 rounded-2xl shadow-sm bg-white"
                 >
-                  <h3 className="text-lg font-bold text-green-600">
+
+                <div className='flex flex-row justify-between'>
+                  <h3 className="text-lg font-bold text-green-600 flex justify-self-start">
                     {job.title}
                   </h3>
+                  <FavoriteButton className="flex justify-end"></FavoriteButton>
+                </div> 
 
                   <p className="mt-1 text-gray-700">
                     <span className="font-semibold">บริษัท:</span> {job.company}

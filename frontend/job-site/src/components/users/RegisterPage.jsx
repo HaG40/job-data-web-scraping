@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 function RegisterPage() {
 
     const [username, setUsername] = useState('')
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [dob,setDob] = useState("")
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -19,6 +22,9 @@ function RegisterPage() {
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
                 username,
+                firstname: firstName,
+                lastname: lastName,
+                date_of_birth: dob,
                 email,
                 password
             })
@@ -32,7 +38,7 @@ function RegisterPage() {
               
         setTimeout(() => {
             setRedirect(true);
-        }, 2000);
+        }, 1000);
        }
     }
     
@@ -41,7 +47,7 @@ function RegisterPage() {
     }
 
     return (
-        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 mt-15 shadow'>
+        <div className='p-4 max-w-xl mx-auto border rounded-2xl border-gray-300 justify-self-center px-10 pt-8 pb-12 my-15 shadow'>
             <h1 className="text-3xl font-bold mb-6 text-green-700">ลงทะเบียน</h1>
             <form onSubmit={handleSubmit}>
                 <div className='justify-self-center flex flex-col'>
@@ -55,6 +61,34 @@ function RegisterPage() {
                         onChange={(e) => setUsername(e.target.value)}
                         className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
                         placeholder='username'
+                    />
+                    <div className='flex flex-row'>
+                        {errormsg != "" && firstName == "" && lastName == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='mb-2'>ชื่อจริง :</label>
+                    </div>            
+                    <input 
+                        type="text"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className={`border p-2 rounded w-85 mb-2 shadow border-gray-400` }
+                        placeholder='ชื่อ'
+                    />
+                    <input 
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className={`border p-2 rounded w-85 mb-4 shadow border-gray-400` }
+                        placeholder='นามสกุล'
+                    />
+                    <div className='flex flex-row'>
+                        {errormsg !== "" && dob === "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}
+                        <label className='mb-2'>วันเกิด :</label>
+                    </div>
+                    <input 
+                        type="date"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        className="border p-2 rounded w-85 mb-4 shadow border-gray-400"
                     />
                     <div className='flex flex-row'>
                         {errormsg != "" && email == "" ? <label className='flex text-red-500 text-2xl mr-1'>*</label> : <></>}

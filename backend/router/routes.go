@@ -8,8 +8,9 @@ import (
 
 func SetUpRoutes() {
 	// Job Search Route
-	jobsController := http.HandlerFunc(controller.JobsHandler)
-	http.Handle("/api/jobs", middleware.JobMiddleware(jobsController))
+	http.Handle("/api/jobs", middleware.JobSearchMiddleware(http.HandlerFunc(controller.JobsHandler)))
+	http.Handle("/api/jobs/favorite/add", middleware.JobSearchMiddleware(http.HandlerFunc(controller.AddFavoriteJobHandler)))
+	http.Handle("/api/jobs/favorite/delete", middleware.JobSearchMiddleware(http.HandlerFunc(controller.DeleteFavoriteJobHandler)))
 
 	// Authentication Routes
 	http.HandleFunc("/api/register", controller.Register)

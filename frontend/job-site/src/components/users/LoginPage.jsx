@@ -32,7 +32,7 @@ function LoginPage() {
                 
         setTimeout(() => {
             setRedirect(true);
-        }, 2000);
+        }, 1000);
         }
     }
     

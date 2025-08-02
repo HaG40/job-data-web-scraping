@@ -2,6 +2,8 @@ package controller
 
 import (
 	"encoding/json"
+	"job-scraping-project/database"
+	"job-scraping-project/models"
 	"job-scraping-project/scrapers"
 	"log"
 	"math/rand"
@@ -114,5 +116,74 @@ func JobsHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+	}
+}
+
+func AddFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
+
+	if DB == nil {
+		db := database.Connect()
+		DB = db
+	}
+
+	if r.Method == http.MethodPost {
+
+		var fav models.FavoriteJobs
+
+		w.Header().Set("Content-type", "application/json")
+
+		if err := json.NewDecoder(r.Body).Decode(&fav); err != nil {
+			http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if err := DB.Create(&fav).Error; err != nil {
+			http.Error(w, "Failed to save favorite job: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		json.NewEncoder(w).Encode(fav)
+		w.WriteHeader(http.StatusOK)
+		return
+	} else {
+		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func DeleteFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
+
+	if DB == nil {
+		db := database.Connect()
+		DB = db
+	}
+
+	if r.Method == http.MethodDelete {
+
+		var fav models.FavoriteJobs
+
+		w.Header().Set("Content-type", "application/json")
+
+		if err := json.NewDecoder(r.Body).Decode(&fav); err != nil {
+			http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		result := DB.Where(&fav).Delete(&models.FavoriteJobs{})
+		if result.Error != nil {
+			http.Error(w, "Failed to delete favorite job: "+result.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+		if result.RowsAffected == 0 {
+			http.Error(w, "No matching favorite job found to delete", http.StatusNotFound)
+			return
+		}
+
+		json.NewEncoder(w).Encode(fav)
+		w.WriteHeader(http.StatusOK)
+		return
+	} else {
+		http.Error(w, "Only DELETE allowed", http.StatusMethodNotAllowed)
+		return
 	}
 }

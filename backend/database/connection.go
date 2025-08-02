@@ -26,7 +26,7 @@ func Connect() *gorm.DB {
 		return nil
 	}
 
-	db.AutoMigrate(models.User{})
+	db.AutoMigrate(models.User{}, models.FavoriteJobs{})
 
 	return db
 }
