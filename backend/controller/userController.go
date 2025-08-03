@@ -47,6 +47,28 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		dob, err := time.Parse("2006-01-02", user.DateOfBirth)
+		if err != nil {
+			http.Error(w, "รูปแบบวันเกิดไม่ถูกต้อง (รูปแบบที่ถูกต้อง: YYYY-MM-DD)", http.StatusBadRequest)
+			return
+		}
+
+		today := time.Now()
+		age := today.Year() - dob.Year()
+		if today.Month() < dob.Month() || (today.Month() == dob.Month() && today.Day() < dob.Day()) {
+			age-- // birthday hasn't occurred yet this year
+		}
+
+		if age < 15 {
+			http.Error(w, "ผู้ใช้ต้องมีอายุอย่างน้อย 15 ปี", http.StatusBadRequest)
+			return
+		}
+
+		if len(user.Password) < 8 {
+			http.Error(w, "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร", http.StatusBadRequest)
+			return
+		}
+
 		// Hash the password
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 		if err != nil {
@@ -172,6 +194,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func User(w http.ResponseWriter, r *http.Request) {
 
 	type Profile struct {
+		UserId      uint   `json:"user_id"`
 		Username    string `json:"username"`
 		FirstName   string `json:"first_name"`
 		LastName    string `json:"last_name"`
@@ -201,7 +224,7 @@ func User(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var profile Profile
-		profile.Username, profile.FirstName, profile.LastName, profile.DateOfBirth, profile.Email, profile.Description = user.Username, user.FirstName, user.LastName, user.DateOfBirth, user.Email, user.Description
+		profile.UserId, profile.Username, profile.FirstName, profile.LastName, profile.DateOfBirth, profile.Email, profile.Description = user.ID, user.Username, user.FirstName, user.LastName, user.DateOfBirth, user.Email, user.Description
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(profile)

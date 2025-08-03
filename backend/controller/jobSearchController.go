@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 func contains(slice []string, value string) bool {
@@ -162,14 +164,12 @@ func DeleteFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
 
 		var fav models.FavoriteJobs
 
-		w.Header().Set("Content-type", "application/json")
-
 		if err := json.NewDecoder(r.Body).Decode(&fav); err != nil {
 			http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		result := DB.Where(&fav).Delete(&models.FavoriteJobs{})
+		result := DB.Where(&fav).Unscoped().Delete(&models.FavoriteJobs{})
 		if result.Error != nil {
 			http.Error(w, "Failed to delete favorite job: "+result.Error.Error(), http.StatusInternalServerError)
 			return
@@ -179,6 +179,7 @@ func DeleteFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		w.Header().Set("Content-type", "application/json")
 		json.NewEncoder(w).Encode(fav)
 		w.WriteHeader(http.StatusOK)
 		return
@@ -186,4 +187,76 @@ func DeleteFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Only DELETE allowed", http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+func GetFavoriteJobsHandler(w http.ResponseWriter, r *http.Request) {
+
+	if DB == nil {
+		db := database.Connect()
+		DB = db
+	}
+
+	if r.Method == http.MethodGet {
+
+		userID := r.URL.Query().Get("userId")
+
+		var favorites []models.FavoriteJobs
+		err := DB.Where("user_id = ?", userID).Find(&favorites).Error
+		if err != nil {
+			http.Error(w, "เกิดข้อผิดพลาดในการดึงข้อมูล", http.StatusInternalServerError)
+			return
+		}
+
+		if len(favorites) == 0 {
+			json.NewEncoder(w).Encode([]scrapers.JobCard{}) // Return empty array, not error
+			return
+		}
+
+		var favoriteJobs []scrapers.JobCard
+		for _, fav := range favorites {
+			favoriteJobs = append(favoriteJobs, scrapers.JobCard{
+				Title:    fav.Title,
+				Company:  fav.Company,
+				Location: fav.Location,
+				Salary:   fav.Salary,
+				URL:      fav.URL,
+				Source:   fav.Source,
+			})
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(favoriteJobs)
+
+	} else {
+		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func CheckFavoriteJobHandler(w http.ResponseWriter, r *http.Request) {
+	if DB == nil {
+		db := database.Connect()
+		DB = db
+	}
+
+	if r.Method == http.MethodGet {
+		userID := r.URL.Query().Get("userId")
+		url := r.URL.Query().Get("url")
+
+		var fav models.FavoriteJobs
+		err := DB.Where("user_Id = ? AND url = ?", userID, url).First(&fav).Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				json.NewEncoder(w).Encode(map[string]bool{"favorited": false})
+				return
+			}
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return
+		}
+
+		json.NewEncoder(w).Encode(map[string]bool{"favorited": true})
+		return
+	}
+
+	http.Error(w, "Only GET method allowed", http.StatusMethodNotAllowed)
 }

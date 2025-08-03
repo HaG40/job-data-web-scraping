@@ -43,7 +43,7 @@ function RegisterPage() {
     }
     
     if (redirect){
-        window.location.replace("/login");
+        window.location.replace("/");
     }
 
     return (

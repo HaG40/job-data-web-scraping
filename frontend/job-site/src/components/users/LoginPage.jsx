@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-
-
 function LoginPage() {
 
     const [user, setUser] = useState('')
@@ -37,7 +35,7 @@ function LoginPage() {
     }
     
     if (redirect){        
-        window.location.replace("/search");
+        window.location.replace("/");
     }
 
     return (

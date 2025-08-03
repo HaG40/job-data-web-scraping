@@ -11,6 +11,8 @@ func SetUpRoutes() {
 	http.Handle("/api/jobs", middleware.JobSearchMiddleware(http.HandlerFunc(controller.JobsHandler)))
 	http.Handle("/api/jobs/favorite/add", middleware.JobSearchMiddleware(http.HandlerFunc(controller.AddFavoriteJobHandler)))
 	http.Handle("/api/jobs/favorite/delete", middleware.JobSearchMiddleware(http.HandlerFunc(controller.DeleteFavoriteJobHandler)))
+	http.Handle("/api/jobs/favorite", middleware.JobSearchMiddleware(http.HandlerFunc(controller.GetFavoriteJobsHandler)))
+	http.Handle("/api/jobs/favorite/check", middleware.JobSearchMiddleware(http.HandlerFunc(controller.CheckFavoriteJobHandler)))
 
 	// Authentication Routes
 	http.HandleFunc("/api/register", controller.Register)

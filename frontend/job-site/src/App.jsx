@@ -1,92 +1,99 @@
-import {Routes, Route, Link, Navigate } from 'react-router-dom';
-import JobSearch from './components/job_search/JobSearch'
-import LoginPage from './components/users/LoginPage'
-import RegisterPage from './components/users/RegisterPage'
+import { Routes, Route, Link } from 'react-router-dom';
+import JobPost from './components/job_post/JobPost';
+import JobSearch from './components/job_search/JobSearch';
+import LoginPage from './components/users/LoginPage';
+import RegisterPage from './components/users/RegisterPage';
 import UserPage from './components/users/UserPage';
 import Logout from './components/users/Logout';
 import { ToastContainer, toast } from 'react-toastify';
-import { useEffect, useState, createContext } from 'react'
+import { useEffect, useState, createContext } from 'react';
+import calculateAge from "./utils/CalculateAge"
 
 export const AuthContext = createContext();
+export const UserContext = createContext();
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null); // single user object
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [username, setUsername] = useState('')
-
-  useEffect( () => {
-  fetch("http://localhost:8888/api/user", { headers: {"Content-Type" : "application/json"} ,credentials: "include" })
-      .then( async res => {
-      if (res.ok) {
-          const data = await res.json()
-          setUsername(data.username)
-      }else{
-          console.log("Failed fetching user data")
-      }
-      })
+  useEffect(() => {
+    fetch("http://localhost:8888/api/user", {
+      headers: { "Content-Type": "application/json" },
+      credentials: "include"
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setUser({
+            id : data.user_id,
+            username: data.username,
+            firstName: data.first_name,
+            lastName: data.last_name,
+            age: calculateAge(data.date_of_birth),
+            email: data.email,
+            description: data.description,
+          });
+        } else {
+          console.log("Failed fetching user data");
+          setUser(null);
+        }
+      });
   }, []);
 
   useEffect(() => {
-  fetch("http://localhost:8888/api/protected", { credentials: "include" })
-    .then(async res => {
-      if (res.ok) {
-        setIsAuthenticated(true);
-        console.log("Authorized")
+    fetch("http://localhost:8888/api/protected", { credentials: "include" })
+      .then(async (res) => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+          if (user?.username) {
+            toast.success(`ยินดีต้อนรับ ${user.username}`);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      });
+  }, [user]);
 
-        if (username != '') {
-          toast.success(`ยินดีต้อนรับ ${username}`)
-        }      
-
-      } else {
-        setIsAuthenticated(false);
-        console.log("Unauthorized")
-      }
-
-    }
-  );
-  }, []);
-  
   return (
-    <>      
-    <div id='header' className='bg-green-500 z-100 text-white sticky top-0 w-screen h-15 flex justify-between shadow items-center'>
-      <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER</h1>
-      <div className='flex flex-row gap-4 items-center text-lg pr-10' >
-        <Link to="/search">ค้นหางาน</Link>
-        {isAuthenticated ? (
-            <Link to="/user">{username}</Link>
-        ) : (
-          null
-        )}
-        {isAuthenticated ? (
-          <Link to="/logout">ออกจากระบบ</Link>
-        ) : (
-          <Link to="/login">เข้าสู่ระบบ</Link>
-        )}
+    <>
+      <div id='header' className='bg-green-500 z-100 text-white sticky top-0 w-screen h-15 flex justify-between shadow items-center'>
+        <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER</h1>
+        <div className='flex flex-row gap-4 items-center text-lg pr-10'>
+          <Link to="/">ค้นหางาน</Link>
+          <Link to="/post">โพสต์หางาน</Link>
+          {isAuthenticated && user ? (
+            <Link to="/user">{user.username}</Link>
+          ) : null}
+          {isAuthenticated ? (
+            <Link to="/logout">ออกจากระบบ</Link>
+          ) : (
+            <Link to="/login">เข้าสู่ระบบ</Link>
+          )}
+        </div>
       </div>
 
-    </div>
-
-        <AuthContext.Provider value={{ isAuthenticated, username, setIsAuthenticated }}>
+      <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+        <UserContext.Provider value={{ user, setUser }}>
           <Routes>
-            <Route path="/search" element={<JobSearch />} />   
-            <Route path="/login" element={<LoginPage />} /> 
-            <Route path="/register" element={<RegisterPage />} /> 
-            <Route path="/user" element={<UserPage />} /> 
-            <Route path="/logout" element={<Logout />} /> 
+            <Route path="/" element={<JobSearch />} />
+            <Route path="/post" element={<JobPost />} />        
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/user" element={<UserPage />} />
+            <Route path="/logout" element={<Logout />} />
           </Routes>
-        </AuthContext.Provider>
+        </UserContext.Provider>
+      </AuthContext.Provider>
 
-
-        <ToastContainer
-          position="bottom-right"
-          autoClose={2500}
-          closeOnClick
-          pauseOnHover
-          theme="light"
-        />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={2500}
+        closeOnClick
+        pauseOnHover
+        theme="light"
+      />
     </>
-        
-  )
+  );
 }
 
-export default App
+export default App;

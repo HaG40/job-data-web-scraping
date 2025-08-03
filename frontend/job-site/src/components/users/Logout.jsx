@@ -16,7 +16,7 @@ function Logout(){
             toast.success("ออกจากระบบสำเร็จ", {position: "bottom-center", hideProgressBar: true,})
             console.log("Logged out")
             setTimeout(() => {               
-                window.location.replace("/search");
+                window.location.replace("/");
             }, 1000);
 
         } else {

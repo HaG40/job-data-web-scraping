@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { toast } from 'react-toastify';
-import { AuthContext } from '../../App';
+import { AuthContext, UserContext } from '../../App';
 import FavoriteButton from './FavoriteButton';
 import { FaSearch } from 'react-icons/fa';
 
@@ -11,7 +10,8 @@ function JobSearch() {
   const [source, setSource] = useState("all");
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuthenticated, username } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,7 +140,10 @@ const handleSidebarClick =(kw) => {
                   <h3 className="text-lg font-bold text-green-600 flex justify-self-start">
                     {job.title}
                   </h3>
-                  <FavoriteButton className="flex justify-end"></FavoriteButton>
+                  {isAuthenticated  ? 
+                    <FavoriteButton className="flex justify-end" userId={user.id} title={job.title} company={job.company} location={job.location} salary={job.salary} url={job.url} src = {job.source} /> :
+                    <FavoriteButton className="flex justify-end" disabled="true" />
+                  }
                 </div> 
 
                   <p className="mt-1 text-gray-700">
@@ -221,7 +224,7 @@ const handleSidebarClick =(kw) => {
                   <h2 className="flex pb-5 text-green-600 font-bold cursor-default">ประเภทงานแนะนำ</h2>
               </div>
               {categoryList.map((category,index) => (
-                  <CategoryItemComponent index={index+1} value={category} jobItems={jobList[index]} />    
+                  <CategoryItemComponent key={index} index={index+1} value={category} jobItems={jobList[index]} />    
               ))}
           </div>
       )
@@ -248,11 +251,13 @@ const handleSidebarClick =(kw) => {
                   <ul>
                       {props.jobItems.map((item,i) => (
                         <li 
-                          className="group flex p-1.5 pl-3 cursor-pointer text-gray-500 border-b border-gray-200 hover:text-emerald-500 hover:bg-green-50"
+                          key={`${props.index}-${i}`}
+                          className="group flex flex-row justify-between p-1.5 pl-3 cursor-pointer text-gray-500 border-b border-gray-200 hover:text-emerald-500 hover:bg-green-50"
                           onClick={(e) => 
                             handleSidebarClick(item)}
                         >
-                          <label className=' hidden group-hover:inline'>&#128269; &nbsp;</label> {(item)} 
+                          <label className='items-center'>{(item)} </label>
+                          <FaSearch className=' hidden group-hover:flex justify-self-end-safe items-center mt-1'> &nbsp;</FaSearch> 
                         </li>  
                       ))}
                   </ul>
