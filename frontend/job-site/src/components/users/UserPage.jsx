@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext, UserContext } from '../../App';
 import FavoriteButton from '../job_search/FavoriteButton';
+import UserBox from './UserBox';
 
 function UserPage() {
     const { isAuthenticated } = useContext(AuthContext);
@@ -32,36 +33,13 @@ function UserPage() {
     return <p className="text-center mt-10">กำลังโหลดข้อมูลผู้ใช้...</p>;
   }
 
-  const fullName = `${user.firstName} ${user.lastName}`;
-
-
-  
   return (
     <>
     
-      <div className='mx-auto max-w-xl flex flex-col'>
-        <h1 className='text-2xl font-semibold flex items-center text-green-700 mt-5'>บัญชีผู้ใช้:</h1>
-      </div>
-      <div className='mx-auto max-w-xl border rounded-xl p-8 mt-5 mb-8 border-gray-300 flex flex-col shadow'>
-        <div className='flex justify-between'>
-          <h1 className='text-xl text-green-700 font-medium'>{user.username}</h1>
-          <button className='bg-green-600 text-white px-3 py-1.5 rounded cursor-pointer hover:bg-green-700 disabled:opacity-50 shadow'>แก้ไข</button>
+        <div className='mx-auto max-w-xl flex flex-col'>
+            <h1 className='text-2xl font-semibold flex items-center text-green-700 mt-5'>บัญชีผู้ใช้:</h1>
         </div>
-
-        <br />
-        <div className='ml-4 flex flex-col space-y-2'>
-          <label><b>ชื่อ</b> : {fullName}</label>
-          <label><b>อายุ</b> : {user.age}</label>
-          <label><b>อีเมลล์</b> : {user.email}</label>
-          <div>
-            <b>รายละเอียด</b> : 
-            {user.description === "" 
-              ? <p className='text-gray-500 ml-4 mt-3'>(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์</p> 
-              : user.description
-            }
-          </div>
-        </div>
-      </div>
+        <UserBox />
       <div className="p-4 max-w-xl mx-auto">
       <div className='mx-auto max-w-xl flex flex-col'>
         <h1 className='text-xl font-semibold flex items-center text-green-700'>งานที่สนใจ:</h1>

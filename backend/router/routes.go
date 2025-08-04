@@ -19,6 +19,7 @@ func SetUpRoutes() {
 	http.HandleFunc("/api/login", controller.Login)
 	http.Handle("/api/protected", middleware.AuthMiddleware(http.HandlerFunc(controller.ProtectedHandler)))
 	http.Handle("/api/user", middleware.AuthMiddleware(http.HandlerFunc(controller.User)))
+	http.Handle("/api/user/edit", middleware.AuthMiddleware(http.HandlerFunc(controller.EditUser)))
 	http.Handle("/api/logout", middleware.AuthMiddleware(http.HandlerFunc(controller.Logout)))
 
 }

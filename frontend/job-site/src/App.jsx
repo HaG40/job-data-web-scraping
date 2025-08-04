@@ -29,6 +29,7 @@ function App() {
             username: data.username,
             firstName: data.first_name,
             lastName: data.last_name,
+            dob: data.date_of_birth,
             age: calculateAge(data.date_of_birth),
             email: data.email,
             description: data.description,
@@ -45,9 +46,6 @@ function App() {
       .then(async (res) => {
         if (res.ok) {
           setIsAuthenticated(true);
-          if (user?.username) {
-            toast.success(`ยินดีต้อนรับ ${user.username}`);
-          }
         } else {
           setIsAuthenticated(false);
         }

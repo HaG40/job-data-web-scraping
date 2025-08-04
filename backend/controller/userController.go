@@ -5,6 +5,7 @@ import (
 	"errors"
 	"job-scraping-project/database"
 	"job-scraping-project/models"
+	"job-scraping-project/utils"
 	"log"
 	"net/http"
 	"os"
@@ -47,6 +48,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if utils.HasEmptyOrSpace(user.Username) || utils.HasEmptyOrSpace(user.Email) || utils.HasEmptyOrSpace(user.Password) || utils.HasEmptyOrSpace(user.FirstName) || utils.HasEmptyOrSpace(user.LastName) || utils.HasEmptyOrSpace(user.DateOfBirth) {
+			http.Error(w, "โปรดกรอกข้อมูลโดยที่ไม่มีการเว้นช่องว่าง", http.StatusBadRequest)
+			return
+		}
+
 		dob, err := time.Parse("2006-01-02", user.DateOfBirth)
 		if err != nil {
 			http.Error(w, "รูปแบบวันเกิดไม่ถูกต้อง (รูปแบบที่ถูกต้อง: YYYY-MM-DD)", http.StatusBadRequest)
@@ -56,7 +62,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		today := time.Now()
 		age := today.Year() - dob.Year()
 		if today.Month() < dob.Month() || (today.Month() == dob.Month() && today.Day() < dob.Day()) {
-			age-- // birthday hasn't occurred yet this year
+			age--
 		}
 
 		if age < 15 {
@@ -267,6 +273,51 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Logged out"))
 	} else {
 		http.Error(w, "Only POST allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func EditUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPut {
+		var updatedUser models.User
+		if err := json.NewDecoder(r.Body).Decode(&updatedUser); err != nil {
+			http.Error(w, "Invalid JSON: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		if updatedUser.Username == "" || updatedUser.FirstName == "" || updatedUser.LastName == "" || updatedUser.Email == "" || updatedUser.DateOfBirth == "" {
+			http.Error(w, "โปรดกรอกข้อมูลที่จำเป็นให้ครบถ้วน", http.StatusBadRequest)
+			return
+		}
+
+		if utils.HasEmptyOrSpace(updatedUser.Username) || utils.HasEmptyOrSpace(updatedUser.Email) || utils.HasEmptyOrSpace(updatedUser.FirstName) || utils.HasEmptyOrSpace(updatedUser.LastName) || utils.HasEmptyOrSpace(updatedUser.DateOfBirth) {
+			http.Error(w, "โปรดกรอกข้อมูลที่จำเป็นโดยที่ไม่มีการเว้นช่องว่าง", http.StatusBadRequest)
+			return
+		}
+
+		var existingUser models.User
+		if err := DB.First(&existingUser, updatedUser.ID).Error; err != nil {
+			http.Error(w, "ไม่พบผู้ใช้งาน", http.StatusNotFound)
+			return
+		}
+
+		existingUser.Username = updatedUser.Username
+		existingUser.FirstName = updatedUser.FirstName
+		existingUser.LastName = updatedUser.LastName
+		existingUser.Email = updatedUser.Email
+		existingUser.DateOfBirth = updatedUser.DateOfBirth
+		existingUser.Description = updatedUser.Description
+
+		if err := DB.Save(&existingUser).Error; err != nil {
+			http.Error(w, "เกิดข้อผิดพลาดในการอัปเดตผู้ใช้: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(existingUser)
+	} else {
+		http.Error(w, "Only PUT allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }
