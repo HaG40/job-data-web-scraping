@@ -53,6 +53,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		if len(user.Password) < 8 {
+			http.Error(w, "รหัสผ่านต้องมีความยาวมากกว่า 8", http.StatusBadRequest)
+			return
+		}
+
 		dob, err := time.Parse("2006-01-02", user.DateOfBirth)
 		if err != nil {
 			http.Error(w, "รูปแบบวันเกิดไม่ถูกต้อง (รูปแบบที่ถูกต้อง: YYYY-MM-DD)", http.StatusBadRequest)
