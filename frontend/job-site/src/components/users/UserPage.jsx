@@ -53,7 +53,7 @@ function UserPage() {
                 >
 
                 <div className='flex flex-row justify-between'>
-                  <h3 className="text-lg font-bold text-green-600 flex justify-self-start">
+                  <h3 className="text-lg font-bold text-green-600 flex justify-self-start mb-4">
                     {job.title}
                   </h3>
                   {isAuthenticated  ? 

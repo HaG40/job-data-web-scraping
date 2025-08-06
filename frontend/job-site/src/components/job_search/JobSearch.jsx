@@ -133,11 +133,11 @@ const handleSidebarClick =(kw) => {
               {results.map((job, index) => (
                 <div
                   key={index}
-                  className="pb-5 pr-5 pl-5 pt-3 border border-gray-200 rounded-2xl shadow-sm bg-white"
+                  className="pb-6 pr-5 pl-5 pt-3 border border-gray-200 rounded-2xl shadow-sm bg-white"
                 >
 
                 <div className='flex flex-row justify-between'>
-                  <h3 className="text-lg font-bold text-green-600 flex justify-self-start">
+                  <h3 className="text-lg font-bold text-green-600 flex justify-self-start mb-4">
                     {job.title}
                   </h3>
                   {isAuthenticated  ? 
