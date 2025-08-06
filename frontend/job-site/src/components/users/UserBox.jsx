@@ -56,7 +56,7 @@ function UserBox() {
         <div className='flex flex-row justify-between mb-5'>
             <div className='flex justify-start'>
                 <input 
-                className= 'text-xl text-green-700 font-medium'
+                className= 'text-xl text-green-700 font-medium userbox' 
                 type="text" 
                 value={requestData.username}
                 onChange={e =>
@@ -80,10 +80,10 @@ function UserBox() {
 
 
             <div  className='ml-4 flex flex-col space-y-2'>
-            <div className='flex flex-row '>
+            <div className='flex flex-row outline:none'>
                 <label><b>ชื่อ</b> :&nbsp;</label>
                 <input 
-                className= ''
+                className= 'text-gray-500 userbox'
                 type="text" 
                 value={requestData.firstName}
                 onChange={e =>
@@ -97,7 +97,7 @@ function UserBox() {
             <div className='flex flex-row '>
                 <label><b>นามสกุล</b> :&nbsp;</label>
                 <input 
-                className= ''
+                className= 'text-gray-500 userbox'
                 type="text" 
                 value={requestData.lastName}
                 onChange={e =>
@@ -111,7 +111,7 @@ function UserBox() {
             <div className='flex flex-row '>
                 <label><b>อีเมลล์</b> :&nbsp;</label>
                 <input 
-                className= ''
+                className= 'text-gray-500 userbox'
                 type="email" 
                 value={requestData.email}
                 onChange={e =>
@@ -125,7 +125,7 @@ function UserBox() {
                 <div className='flex flex-col '>
                 <label><b>รายละเอียด</b> :&nbsp;</label>
                 <textarea 
-                className='text-gray-500 ml-4 mt-3'
+                className='text-gray-500 mx-4 mt-3 userbox'
                 type="text"                 
                 value={requestData.description}
                 placeholder="(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์"
@@ -153,16 +153,16 @@ function UserBox() {
             </div>
 
             <div className='ml-4 flex flex-col space-y-2'>
-            <label><b>ชื่อ</b> : {fullName}</label>
-            <label><b>อายุ</b> : {user.age}</label>
-            <label><b>อีเมลล์</b> : {user.email}</label>
-            <div>
-                <b>รายละเอียด</b> : 
-                {user.description === "" 
-                ? <p className='text-gray-500 ml-4 mt-3'>(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์</p> 
-                : user.description
-                }
-            </div>
+                <label><b>ชื่อ</b> : {fullName}</label>
+                <label><b>อายุ</b> : {user.age}</label>
+                <label><b>อีเมลล์</b> : {user.email}</label>
+                <label><b>รายละเอียด</b>: </label>  
+                <div className='text-gray-500 mt-1 mx-4'>                    
+                    {user.description === "" 
+                    ? <p >(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์</p> 
+                    : user.description
+                    }
+                </div>
             </div>
         </>
         }

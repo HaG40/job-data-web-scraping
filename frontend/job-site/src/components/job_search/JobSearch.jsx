@@ -111,7 +111,7 @@ const handleSidebarClick =(kw) => {
 
       <div className="mt-6">
         <div className='flex justify-between'> 
-          <h2 className="text-xl font-semibold flex items-center text-green-700">ผลการค้นหา:</h2>
+          <h2 className="text-xl font-semibold flex items-center text-green-600">ผลการค้นหา:</h2>
           
           {results.length > 0 ? 
             <div className='flex items-center'>

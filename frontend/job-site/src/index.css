@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+
+.userbox:focus {
+  outline: none;
+  
+}
