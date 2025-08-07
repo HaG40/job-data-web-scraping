@@ -16,12 +16,21 @@ type FindPost struct {
 	Contact
 }
 
-type HirePost struct {
+type RecruitPost struct {
 	gorm.Model
 	JobPost
 	CompanyName string `json:"company_name"`
 	Location    string `json:"location"`
 	Salary      string `json:"salary"`
+	Contact
+}
+
+type ContractPost struct {
+	gorm.Model
+	JobPost
+	Contractor string `json:"contractor"`
+	Location   string `json:"location"`
+	Pay        string `json:"pay"`
 	Contact
 }
 

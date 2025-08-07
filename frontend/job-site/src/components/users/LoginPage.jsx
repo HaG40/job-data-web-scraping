@@ -81,7 +81,7 @@ function LoginPage() {
                     {errormsg != ""  ? <label className='text-red-500 '>** {errormsg}</label>:<></>}
 
                     <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer shadow'>ล็อกอิน</button>
-                    <Link to="/register" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>ไม่มีบัญชีผู้ใช้?</Link>
+                    <Link to="/user/register" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>ไม่มีบัญชีผู้ใช้?</Link>
                 </div>
             </form>
         </div>

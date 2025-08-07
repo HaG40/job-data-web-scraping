@@ -142,7 +142,7 @@ function RegisterPage() {
                     
 
                     <button type='submit' className=' bg-green-600 text-white px-4 pr-5 pl-5 py-2 mt-5 rounded hover:bg-green-700 disabled:opacity-50 cursor-pointer'>ลงทะเบียน</button>
-                    <Link to="/login" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>มีบัญชีผู้ใช้อยู่แล้ว</Link>
+                    <Link to="/user/login" className='text-blue-600 flex justify-center mt-5 hover:underline cursor-pointer'>มีบัญชีผู้ใช้อยู่แล้ว</Link>
                 </div>
             </form>
         </div>

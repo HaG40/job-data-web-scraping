@@ -4,6 +4,8 @@ import JobSearch from './components/job_search/JobSearch';
 import LoginPage from './components/users/LoginPage';
 import RegisterPage from './components/users/RegisterPage';
 import UserPage from './components/users/UserPage';
+import ViewUserPage from './components/users/ViewUserPage';
+import CreatePost from './components/job_post/CreatePost';
 import Logout from './components/users/Logout';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState, createContext } from 'react';
@@ -14,7 +16,7 @@ export const UserContext = createContext();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null); // single user object
+  const [user, setUser] = useState(null); 
 
   useEffect(() => {
     fetch("http://localhost:8888/api/user", {
@@ -63,9 +65,9 @@ function App() {
             <Link to="/user">{user.username}</Link>
           ) : null}
           {isAuthenticated ? (
-            <Link to="/logout">ออกจากระบบ</Link>
+            <Link to="/user/logout">ออกจากระบบ</Link>
           ) : (
-            <Link to="/login">เข้าสู่ระบบ</Link>
+            <Link to="/user/login">เข้าสู่ระบบ</Link>
           )}
         </div>
       </div>
@@ -75,10 +77,12 @@ function App() {
           <Routes>
             <Route path="/" element={<JobSearch />} />
             <Route path="/post" element={<JobPost />} />        
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/user/login" element={<LoginPage />} />
+            <Route path="/user/register" element={<RegisterPage />} />
             <Route path="/user" element={<UserPage />} />
-            <Route path="/logout" element={<Logout />} />
+            <Route path='/user/view' element={<ViewUserPage/>}/>
+            <Route path='/post/create' element={<CreatePost/>}/>
+            <Route path="/user/logout" element={<Logout />} />
           </Routes>
         </UserContext.Provider>
       </AuthContext.Provider>

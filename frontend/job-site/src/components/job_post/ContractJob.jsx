@@ -1,11 +1,10 @@
-
 import { AuthContext, UserContext } from '../../App';
 import React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
+import { FaCaretDown,FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-function FindJob() {
+function ContractJob() {
 
     const { isAuthenticated } = useContext(AuthContext);
     const { user } = useContext(UserContext);
@@ -14,9 +13,9 @@ function FindJob() {
 
     const HandleShowContact = (index) => {
         if (showContact === index) {
-            setShowContact(null);
+            setShowContact(null);            
         } else {
-            setShowContact(index);
+            setShowContact(index);            
         }
     };
 
@@ -30,17 +29,16 @@ function FindJob() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:8888/api/jobs/get/find`, {
+                const res = await fetch(`http://localhost:8888/api/jobs/get/contract`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
 
                 if (!res.ok) {
-                    console.log("Failed fetching data from FindJob");
+                    console.log("Failed fetching data from ContractPost");
                 } else {
                     const data = await res.json()
-                    console.log("Fetch FindPost Completed");
-                    // console.log(data)
+                    console.log("Fetch ContractPost Completed");
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
@@ -58,7 +56,7 @@ function FindJob() {
     return (
         <>
             <div className="flex flex-col w-150">
-                <h1 className="text-green-600 font-semibold text-2xl m-4 border-b-1 border-gray-300 pb-3">หางาน:</h1>
+                <h1 className="text-green-600 font-semibold text-2xl m-4 border-b-1 border-gray-300 pb-3">ฟรีแลนซ์:</h1>
                     <div className="space-y-4 mt-4">
                         {posts.map((post, index) => (
                             <div
@@ -71,20 +69,22 @@ function FindJob() {
                                 <label className='flex justify-end text-gray-400'>{FormatDate(post.CreatedAt)}</label>
                             </div>
                             <div className='mx-4 flex flex-col'>
-                                <label className='text-gray-500 mb-2'>{post.description}</label>
-                                
+                                <label className='text-gray-500 mb-3'>{post.description}</label>
+                                {post.contractor != "" ? <label><span className='font-semibold text-black'>ผู้ว่าจ้าง:</span> {post.contractor}</label> : <></>}
+                                {post.location != "" ? <label><span className='font-semibold text-black'>สถานที่:</span>  {post.location}</label> : <></>}
+                                {post.pay != "" ? <label><span className='font-semibold text-black'>ค่าจ้าง:</span>  {post.pay}</label> : <></>}
+
                                 <div className='flex flex-row justify-between'>
                                     <button 
                                         className='mt-4 mb-2 font-semibold flex justify-start cursor-pointer' 
                                         onClick={() => HandleShowContact(index)}>
                                         ช่องทางการติดต่อ
-                                        {showContact === index ?                           
+                                        {showContact == index ?                           
                                             <FaCaretUp className='ml-1 mt-1' />
                                         :
                                             <FaCaretDown className='ml-1 mt-1' />
                                         }                                
                                     </button>
-
                                     {user?.id == post.posted_by?.ID && isAuthenticated ? 
                                         <Link 
                                             to = '/user'
@@ -99,7 +99,6 @@ function FindJob() {
                                             <span className='text-blue-500 underline'>{post.posted_by?.username}</span>
                                         </Link>                                         
                                     }
-
                                 </div>
 
                                 {showContact === index ?                                 
@@ -111,11 +110,8 @@ function FindJob() {
                                     {post.facebook != "" ? <label><span className='font-semibold text-black'>Facebook:</span> {post.facebook}</label> : <></>}
                                     {post.linkedin != "" ? <label><span className='font-semibold text-black'>Linkedin:</span> {post.linkedin}</label> : <></>}
                                 </div>
-                                :<></>}
-
-                            </div>
-
-
+                                :<></>}                     
+                                </div>
                             </div>
                         ))
                         }
@@ -126,4 +122,4 @@ function FindJob() {
     )
 }
 
-export default FindJob
+export default ContractJob

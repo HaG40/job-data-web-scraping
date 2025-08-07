@@ -214,6 +214,11 @@ func User(w http.ResponseWriter, r *http.Request) {
 		Description string `json:"description"`
 	}
 
+	if DB == nil {
+		db := database.Connect()
+		DB = db
+	}
+
 	if r.Method == http.MethodGet {
 		userID, valid := r.Context().Value("userID").(string)
 		if !valid {
@@ -241,6 +246,48 @@ func User(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(profile)
 		w.WriteHeader(http.StatusOK)
 
+	} else {
+		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func ViewUser(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	type Profile struct {
+		UserId      uint   `json:"user_id"`
+		Username    string `json:"username"`
+		FirstName   string `json:"first_name"`
+		LastName    string `json:"last_name"`
+		DateOfBirth string `json:"date_of_birth"`
+		Email       string `json:"email"`
+		Description string `json:"description"`
+	}
+
+	if r.Method == http.MethodGet {
+		userID := r.URL.Query().Get("userID")
+
+		var user models.User
+		findUser := DB.First(&user, userID).Error
+		if findUser != nil {
+			if findUser == gorm.ErrRecordNotFound {
+				http.Error(w, "ไม่พบผู้ใช้", http.StatusNotFound)
+				return
+			}
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return
+		}
+
+		var profile Profile
+		profile.UserId, profile.Username, profile.FirstName, profile.LastName, profile.DateOfBirth, profile.Email, profile.Description = user.ID, user.Username, user.FirstName, user.LastName, user.DateOfBirth, user.Email, user.Description
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(profile)
+		w.WriteHeader(http.StatusOK)
 	} else {
 		http.Error(w, "Only GET allowed", http.StatusMethodNotAllowed)
 		return
