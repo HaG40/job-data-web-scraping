@@ -39,6 +39,7 @@ function ContractJob() {
                 } else {
                     const data = await res.json()
                     console.log("Fetch ContractPost Completed");
+                    setPosts(data)
                 }
             } catch (err) {
                 console.error("Fetch error:", err);

@@ -40,6 +40,7 @@ function FindJob() {
                 } else {
                     const data = await res.json()
                     console.log("Fetch FindPost Completed");
+                    setPosts(data)
                     // console.log(data)
                 }
             } catch (err) {

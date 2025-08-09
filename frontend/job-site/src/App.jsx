@@ -57,7 +57,7 @@ function App() {
   return (
     <>
       <div id='header' className='bg-green-500 z-100 text-white sticky top-0 w-screen h-15 flex justify-between shadow items-center'>
-        <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER</h1>
+        <h1 className='flex pl-5 items-center font-bold text-4xl'>JOB.SCRAPER TH</h1>
         <div className='flex flex-row gap-4 items-center text-lg pr-10'>
           <Link to="/">ค้นหางาน</Link>
           <Link to="/post">โพสต์หางาน</Link>

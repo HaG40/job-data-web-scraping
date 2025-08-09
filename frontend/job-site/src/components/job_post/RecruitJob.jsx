@@ -39,6 +39,7 @@ function RecruitJob() {
                 } else {
                     const data = await res.json()
                     console.log("Fetch RecruitPost Completed");
+                    setPosts(data)
                     // console.log(data)
                 }
             } catch (err) {
