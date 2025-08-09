@@ -47,7 +47,7 @@ function UserBox() {
     return (
         <>
 
-        <div className='mx-auto max-w-xl border rounded-xl p-8 mt-5 mb-8 border-gray-300 flex flex-col shadow'>
+        <div className='mx-auto max-w-3xl border rounded-xl p-8 mt-5 mb-8 border-gray-300 flex flex-col shadow'>
 
 
         {editMode ? 
@@ -79,7 +79,7 @@ function UserBox() {
             </div>
 
 
-            <div  className='ml-4 flex flex-col space-y-2'>
+            <div  className='mx-4 flex flex-col space-y-2'>
             <div className='flex flex-row outline:none'>
                 <label><b>ชื่อ</b> :&nbsp;</label>
                 <input 
@@ -125,7 +125,7 @@ function UserBox() {
                 <div className='flex flex-col '>
                 <label><b>รายละเอียด</b> :&nbsp;</label>
                 <textarea 
-                className='text-gray-500 mx-4 mt-3 userbox'
+                className='text-gray-500 mx-4 mt-3 userbox h-100 border border-gray-200 p-4 resize-none'
                 type="text"                 
                 value={requestData.description}
                 placeholder="(ไม่บังคับ) กรอกข้อมูลงานที่ต้องการ, ความสามารถ, ประสบการณ์"

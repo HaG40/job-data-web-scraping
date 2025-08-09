@@ -14,6 +14,7 @@ type FindPost struct {
 	gorm.Model
 	JobPost
 	Contact
+	Comments
 }
 
 type RecruitPost struct {
@@ -23,6 +24,7 @@ type RecruitPost struct {
 	Location    string `json:"location"`
 	Salary      string `json:"salary"`
 	Contact
+	Comments
 }
 
 type ContractPost struct {
@@ -32,6 +34,7 @@ type ContractPost struct {
 	Location   string `json:"location"`
 	Pay        string `json:"pay"`
 	Contact
+	Comments
 }
 
 type Contact struct {
@@ -41,4 +44,11 @@ type Contact struct {
 	Instagram string `json:"instagram"`
 	FaceBook  string `json:"facebook"`
 	LinkedIn  string `json:"linkedin"`
+}
+
+type Comments struct {
+	gorm.Model
+	Text     string `json:"text"`
+	Username string `json:"username"`
+	UserID   uint   `gorm:"foreignKey:UserID"`
 }

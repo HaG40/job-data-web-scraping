@@ -2,6 +2,7 @@ import { FaPlus } from "react-icons/fa"
 import FindJob from "./FindJob"
 import RecruitJob from "./RecruitJob"
 import ContractJob from "./ContractJob"
+import { Link } from "react-router-dom"
 
 
 function JobPost() {
@@ -16,9 +17,9 @@ function JobPost() {
             <ContractJob />
          </div>
         <div className="fixed bottom-10 right-15">
-        <button className="w-16 h-16 bg-green-600 text-white text-3xl font-semibold rounded-full hover:bg-green-700 shadow disabled:opacity-50 flex items-center justify-center">
+        <Link to='/post/create' className="w-16 h-16 bg-green-600 text-white text-3xl font-semibold rounded-full hover:bg-green-700 shadow disabled:opacity-50 flex items-center justify-center">
             <FaPlus/>
-        </button>
+        </Link>
         </div>
         </>
 

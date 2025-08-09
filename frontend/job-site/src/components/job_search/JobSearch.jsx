@@ -55,7 +55,7 @@ const handleSidebarClick =(kw) => {
       <SideBar/>
       <div className="p-4 max-w-xl mx-auto">
 
-      <h1 className="text-2xl font-bold mb-4 text-green-700 ml-4">Job Search</h1>
+      <h1 className="text-2xl font-bold mb-4 text-green-700">Job Search</h1>
       <form onSubmit={handleSubmit} className="space-y-4 ">
         <div className="justify-self-center flex flex-row">
           <div className="relative w-full max-w-md mr-1">
@@ -145,7 +145,7 @@ const handleSidebarClick =(kw) => {
                     <FavoriteButton className="flex justify-end" disabled="true" />
                   }
                 </div> 
-
+                <div className='mx-4'>
                   <p className="mt-1 text-gray-700">
                     <span className="font-semibold">บริษัท:</span> {job.company}
                   </p>
@@ -173,7 +173,7 @@ const handleSidebarClick =(kw) => {
                       {job.source}
                     </span>
                   </p>
-
+                </div>
                 </div>
               ))}
             </div>
