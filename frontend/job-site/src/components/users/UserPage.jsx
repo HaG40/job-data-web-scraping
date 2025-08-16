@@ -15,7 +15,7 @@ function UserPage() {
         try {
         const res = await fetch(`http://localhost:8888/api/jobs/favorite?userId=${user.id}`, {
             credentials: "include"
-        });
+        })
         const data = await res.json();
             setFavJobs(data)
         } catch (err) {

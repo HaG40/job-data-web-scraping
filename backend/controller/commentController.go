@@ -76,10 +76,12 @@ func PostComment(w http.ResponseWriter, r *http.Request) {
 
 		if comment.Text == "" {
 			http.Error(w, "ไม่อนุญาตให้แสดงความคิดเห็นเป็นช่องว่าง", http.StatusBadRequest)
+			return
 		}
 
 		if comment.PostID == 0 {
 			http.Error(w, "ไม่พบโพสต์", http.StatusBadRequest)
+			return
 		}
 
 		if err := DB.Create(&comment).Error; err != nil {

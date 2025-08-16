@@ -2,29 +2,30 @@ import React from "react";
 import { useContext, useState } from "react";
 import { AuthContext, UserContext } from "../../App";
 
-function CommentBox ({postID, postType}) {
+function CommentBox (props) {
 
     const { isAuthenticated } = useContext(AuthContext);
     const { user } = useContext(UserContext);
 
     const [text, setText] = useState()
 
-    const HandleSubmit = (e) => {
-        e.PreventDefault()
+    const HandleSubmit = async (e) => {
+        e.preventDefault()
 
-        res = fetch(`http://localhost:8888/api/jobs/post/comments?type=${postType}`, {
+        const res = await fetch(`http://localhost:8888/api/jobs/post/comments?type=${props.postType}`, {
             credentials : 'include',
-            headers : 'Content-Type : application/json',
+            headers: {"Content-Type" : "application/json"},
             method : 'POST',
-            body : {
-                post_id: postID,
+            body : JSON.stringify({
+                post_id: props.postID,
                 text: text,
-                "user_id": user.id,
-                "username": user.username || "Anonymous"
-            }
+                user_id: user.id,
+                username: user.username || "Anonymous"
+            })
         })
         if (!res.ok) {
-                console.log("Failed Posting Comment: "+ res.text);
+                const err = await res.text()
+                console.log("Failed Posting Comment: "+ err);
         } else {
                 console.log("Posted successfully");
                 window.location.replace("/post");
@@ -36,7 +37,13 @@ function CommentBox ({postID, postType}) {
         <>
         <div className="mx-auto border rounded-2xl border-gray-300 shadow p-2 pl-5 mb-6">
             <form onSubmit={HandleSubmit} className="flex flex-row justify-between">
-                <input  type="text" onChange={(e) => setText(e.target.value)} className={`w-full outline-0 ${!isAuthenticated ? "cursor-not-allowed":"cursor-text"}`} placeholder={`${isAuthenticated ? 'แสดงความคิดเห็นหรือสอบถาม...':'กรุณาเข้าสู่ระบบก่อนทำการแสดงความคิดเห็น...'}`} disabled={!isAuthenticated}/>
+                <input  
+                type="text" 
+                value={text}
+                onChange={(e) => setText(e.target.value)} 
+                className={`w-full outline-0 ${!isAuthenticated ? "cursor-not-allowed":"cursor-text"}`} 
+                placeholder={`${isAuthenticated ? 'แสดงความคิดเห็นหรือสอบถาม...':'กรุณาเข้าสู่ระบบก่อนทำการแสดงความคิดเห็น...'}`} 
+                disabled={!isAuthenticated}/>
 
                 <button
                     type="submit"

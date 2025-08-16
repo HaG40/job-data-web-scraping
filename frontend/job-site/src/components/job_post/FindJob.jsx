@@ -1,10 +1,10 @@
-
 import { AuthContext, UserContext } from '../../App';
 import React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import CommentBox from './CommentBox';
+import CommentList from './CommentList';
 
 function FindJob() {
 
@@ -42,7 +42,7 @@ function FindJob() {
                     const data = await res.json()
                     console.log("Fetch FindPost Completed");
                     setPosts(data)
-                    console.log(data)
+                    // console.log(data)
                 }
             } catch (err) {
                 console.error("Fetch error:", err);
@@ -121,6 +121,7 @@ function FindJob() {
 
                             
                             </div>
+                            <CommentList postType={post.type}/>
                             <CommentBox postID={post.ID} postType={post.type}/>
                             </>
                         ))

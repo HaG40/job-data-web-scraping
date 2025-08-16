@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { FaCaretDown,FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import CommentBox from './CommentBox';
+import CommentList from './CommentList';
 
 function RecruitJob() {
 
@@ -119,6 +120,7 @@ function RecruitJob() {
                                 :<></>}
                                 </div>
                             </div> 
+                            <CommentList postType={post.type}/>
                             <CommentBox postID={post.ID} postType={post.type}/>
                             </>
                         ))
