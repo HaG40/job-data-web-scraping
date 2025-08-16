@@ -1,7 +1,7 @@
 package main
 
 import (
-	"job-scraping-project/backend/router"
+	"job-scraping-project/router"
 	"log"
 	"net/http"
 	"os"

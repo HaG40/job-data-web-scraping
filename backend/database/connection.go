@@ -1,7 +1,7 @@
 package database
 
 import (
-	"job-scraping-project/backend/models"
+	"job-scraping-project/models"
 	"log"
 	"os"
 

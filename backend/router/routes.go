@@ -1,8 +1,8 @@
 package router
 
 import (
-	"job-scraping-project/backend/controller"
-	"job-scraping-project/backend/middleware"
+	"job-scraping-project/controller"
+	"job-scraping-project/middleware"
 	"net/http"
 )
 

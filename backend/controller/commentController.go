@@ -2,8 +2,8 @@ package controller
 
 import (
 	"encoding/json"
-	"job-scraping-project/backend/database"
-	"job-scraping-project/backend/models"
+	"job-scraping-project/database"
+	"job-scraping-project/models"
 	"net/http"
 )
 

@@ -2,9 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"job-scraping-project/backend/database"
-	"job-scraping-project/backend/models"
-	"job-scraping-project/backend/scrapers"
+	"job-scraping-project/database"
+	"job-scraping-project/models"
+	"job-scraping-project/scrapers"
 	"log"
 	"math/rand"
 	"net/http"

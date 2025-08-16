@@ -1,7 +1,7 @@
 package models
 
 import (
-	"job-scraping-project/backend/scrapers"
+	"job-scraping-project/scrapers"
 
 	"gorm.io/gorm"
 )

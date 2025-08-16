@@ -3,9 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"errors"
-	"job-scraping-project/backend/database"
-	"job-scraping-project/backend/models"
-	"job-scraping-project/backend/utils"
+	"job-scraping-project/database"
+	"job-scraping-project/models"
+	"job-scraping-project/utils"
 
 	"log"
 	"net/http"
