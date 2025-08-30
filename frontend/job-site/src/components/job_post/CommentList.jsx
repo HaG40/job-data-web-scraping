@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from 'react';
 import TimeAgo from "../../utils/TimeAgo"
+import { AuthContext, UserContext } from '../../App';
 
 function CommentList(props) {
 
+    const { isAuthenticated } = useContext(AuthContext);
+    const { user } = useContext(UserContext);
     const [comments,setComments] = useState([])
     const [msg, setMsg] = useState("")
     const [toggle, setToggle] = useState(false)
@@ -32,24 +35,26 @@ function CommentList(props) {
 
     return (
         <>
-        <div className=" p-5 border rounded-xl border-gray-300 flex flex-col shadow">
-            <h1 className='text-md text-green-600 font-semibold mb-2.5'>ความคิดเห็น</h1>
+        <div className=" px-5 flex flex-col">
+            <h1 className='text-md text-green-600 font-semibold mb-1'>ความคิดเห็น :</h1>
             {comments.length == 0 ? 
             <>
                 <h1 className='flex justify-center text-gray-400'>{msg}</h1>
             </>        
             :
             <>
+            <div className="max-h-15 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 {comments.map((comment, index) => 
                     <div className="mx-2 flex flex-col mb-2">
                         <div className="flex flex-row justify-between">
-                            <h1 className='text-black flex mb-1 font-semibold'>{comment.username+" : "}</h1>
+                            <h1 className='text-black flex mb-1 font-semibold'>{comment.username}</h1>
                             <label className='flex justify-end text-gray-400'>{TimeAgo(comment.created_at)}</label>
                         </div>
 
                         <label className="text-gray-500 flex mx-2.5">{comment.text}</label>
                     </div>            
                 )}
+            </div>
             </>
             }
         </div>
