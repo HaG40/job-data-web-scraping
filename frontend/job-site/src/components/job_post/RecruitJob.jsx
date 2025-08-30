@@ -5,6 +5,7 @@ import { FaCaretDown,FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';
+import TimeAgo from "../../utils/TimeAgo"
 
 function RecruitJob() {
 
@@ -72,11 +73,11 @@ function RecruitJob() {
                             >
                             
                             <div className='flex flex-row justify-between items-center '>
-                                <h1 className='text-lg text-green-600 font-bold mb-4'>{post.title}</h1>
-                                <label className='flex justify-end text-gray-400'>{FormatDate(post.CreatedAt)}</label>
+                                <h1 to='/post/view' className='text-lg text-green-600 font-bold mb-4'>{post.title}</h1>
+                                <label className='flex justify-end text-gray-400'>{TimeAgo(post.CreatedAt)}</label>
                             </div>
                             <div className='mx-4 flex flex-col'>
-                                <textarea className='text-gray-500 mb-3 post-text'>{post.description}</textarea>
+                                <textarea className='text-gray-500 mb-3 post-text' defaultValue={post.description} readOnly></textarea>
                                 {post.company_name != "" ? <label><span className='font-semibold text-black'>บริษัท:</span> {post.company_name}</label> : <></>}
                                 {post.location != "" ? <label><span className='font-semibold text-black'>สถานที่:</span> {post.location}</label> : <></>}
                                 {post.salary != "" ? <label><span className='font-semibold text-black'>เงินเดือน:</span> {post.salary}</label> : <></>}
@@ -120,7 +121,7 @@ function RecruitJob() {
                                 :<></>}
                                 </div>
                             </div> 
-                            <CommentList postType={post.type}/>
+                            <CommentList postID={post.ID} postType={post.type}/>
                             <CommentBox postID={post.ID} postType={post.type}/>
                             </>
                         ))

@@ -5,6 +5,7 @@ import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import CommentBox from './CommentBox';
 import CommentList from './CommentList';
+import TimeAgo from "../../utils/TimeAgo"
 
 function FindJob() {
 
@@ -70,11 +71,17 @@ function FindJob() {
                             >
                             
                             <div className='flex flex-row justify-between items-center '>
-                                <h1 className='text-lg text-green-600 font-bold mb-4'>{post.title}</h1>
+                                <Link 
+                                    to='/post/view'
+                                    state={{ post: post }}
+                                    className='text-lg text-green-600 font-bold mb-4'
+                                >
+                                    {post.title}
+                                </Link>
                                 <label className='flex justify-end text-gray-400'>{FormatDate(post.CreatedAt)}</label>
                             </div>
                             <div className='mx-4 flex flex-col'>
-                                <textarea className='text-gray-500 mb-2 post-text'>{post.description}</textarea>
+                                <textarea className='text-gray-500 mb-2 post-text' defaultValue={post.description} readOnly></textarea>
                                 
                                 <div className='flex flex-row justify-between'>
                                     <button 
@@ -121,7 +128,7 @@ function FindJob() {
 
                             
                             </div>
-                            <CommentList postType={post.type}/>
+                            <CommentList postID={post.ID} postType={post.type}/>
                             <CommentBox postID={post.ID} postType={post.type}/>
                             </>
                         ))

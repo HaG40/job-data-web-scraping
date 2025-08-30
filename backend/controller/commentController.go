@@ -5,6 +5,7 @@ import (
 	"job-scraping-project/database"
 	"job-scraping-project/models"
 	"net/http"
+	"strconv"
 )
 
 func GetComments(w http.ResponseWriter, r *http.Request) {
@@ -23,16 +24,20 @@ func GetComments(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		var comments []models.Comment
-		query := DB
+		postIDInt, err := strconv.Atoi(postID)
+		if err != nil {
+			postIDInt = 0
+		}
 
-		if err := query.Find(&comments).Error; err != nil {
+		var comments []models.Comment
+
+		if err := DB.Where("post_type = ? AND post_id = ?", postType, postIDInt).Find(&comments).Error; err != nil {
 			http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		if len(comments) == 0 {
-			http.Error(w, "No comments found", http.StatusNotFound)
+			http.Error(w, "ไม่พบความคิดเห็น", http.StatusNotFound)
 			return
 		}
 

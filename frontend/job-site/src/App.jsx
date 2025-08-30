@@ -5,6 +5,7 @@ import LoginPage from './components/users/LoginPage';
 import RegisterPage from './components/users/RegisterPage';
 import UserPage from './components/users/UserPage';
 import ViewUserPage from './components/users/ViewUserPage';
+import ViewPost from './components/job_post/ViewPost';
 import CreatePost from './components/job_post/CreatePost';
 import Logout from './components/users/Logout';
 import { ToastContainer, toast } from 'react-toastify';
@@ -112,6 +113,7 @@ function App() {
             <Route path="/user" element={<UserPage />} />
             <Route path='/user/view' element={<ViewUserPage/>}/>
             <Route path='/post/create' element={<CreatePost/>}/>
+            <Route path='/post/view' element={<ViewPost/>}/>
             <Route path="/user/logout" element={<Logout />} />
           </Routes>
         </UserContext.Provider>
